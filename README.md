@@ -135,4 +135,32 @@ The database was designed using relational modeling principles to support role-b
 
 <h2>Installation</h2>
 <h3>Clone Repository</h3>
-git clone 
+git clone https://github.com/Aryan-Dongre/Salon-ERP-System.git
+<h3>Navigate to Project</h3>
+cd Salon-ERP-System
+<h3>Create Virtual Environment</h3>
+python -m venv venv
+<h3>Activate Virtual Environment</h3>
+Windows powershell:  venv\Scripts\activate
+<h3>Install Dependencies</h3>
+pip install -r requirements.txt
+<h3>Configure Environment Variables</h3>
+Create a .env file using the provided .env.example template.
+<h4>Setup PostgreSQL Database</h4>
+1.Create a PostgreSQL database. <br>
+2.Import the SQL schema from: database/Salon_ERP.sql
+
+<h3>Run Application</h3>
+python app.py
+
+<h2>Learning Outcomes</h2>
+Enterprise Resource Planning (ERP) Architecture <br>
+Role-Based Access Control Systems <br>
+Authentication & Authorization <br>
+Session Management <br>
+Secure Password Reset Flows  <br>
+PostgreSQL Database Design <br>
+Email Service Integration <br>
+Business Workflow Automation <br>
+Production-Oriented Flask Development <br>
+Multi-Role Application Architecture
