@@ -63,3 +63,76 @@ Password Reset Emails <br>
 Automated Email Notifications
 
 <h2>Tech Stack</h2>
+
+<h3>Backend</h3>
+Flask <br>
+Python
+<h3>Database</h3>
+PostgreSQL
+<h3>Frontend</h3>
+HTML5 <br>
+CSS3 <br>
+Bootstrap 5 <br>
+JavaScript <br>
+Jinja2
+<h3>hird-Party Services</h3>
+Gmail SMTP Service
+
+<h2>System Architecture</h2>
+The application follows a modular Flask architecture: <br>
+ERP/ │<br> ├── models/<br> ├── routes/<br> ├── templates/<br> ├── static/<br> ├── utils/<br> ├── python_database/<br> │ <br> ├── app.py <br> ├── config.py <br> ├── extensions.py <br> └── requirements.txt
+<br>
+The project is organized using Flask Blueprints and follows separation of concerns between routes, business logic, database operations, templates, and utilities.
+
+<h2>User Roles</h2>
+ <h3>Admin</h3>
+ Full system access <br>
+Staff management <br>
+Customer management <br>
+Appointment management <br>
+Service management <br>
+
+<h3>Manager</h3>
+Staff supervision <br>
+Appointment management <br>
+Customer management <br>
+Service management 
+
+<h3>Receptionist</h3>
+Customer handling <br>
+Appointment scheduling <br>
+Service management
+
+<h3>Staff</h3> 
+Appointment handling <br>
+Service delivery workflow
+
+<h3>Customer</h3>
+Registration &  <br>
+Service browsing <br>
+Appointment booking <br>
+Payment processing <br>
+Appointment tracking
+<hr>
+<h2>Database Design</h2>
+Main database tables include: 
+<br>
+roles <br>
+users <br>
+staff <br>
+customers <br>
+services <br>
+bookings <br>
+booking_services<br>
+appointments <br>
+payments <br>
+notifications <br>
+attendance <br>
+inventory <br>
+inventory_transactions <br>
+password_resets  <br>
+The database was designed using relational modeling principles to support role-based operations and real-world salon workflows.
+
+<h2>Installation</h2>
+<h3>Clone Repository</h3>
+git clone 
