@@ -1,0 +1,562 @@
+{% extends 'dashboard/base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/appointment/admin_appointments.css') }}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="apmt-page">
+
+  <!-- Header -->
+  <div class="apmt-header">
+    <div class="apmt-header__text">
+      <h1 class="apmt-header__title">Appointment Management</h1>
+      <p class="apmt-header__sub">Manage and monitor all salon appointments</p>
+    </div>
+    <div class="apmt-header__actions">
+      <button class="apmt-btn apmt-btn--primary" id="exportBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="apmt-stats">
+    <div class="apmt-stat-card">
+      <div class="apmt-stat-card__icon apmt-stat-card__icon--total">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+      </div>
+      <div class="apmt-stat-card__body">
+        <span class="apmt-stat-card__label">Total Appointments</span>
+        <span class="apmt-stat-card__value">{{ stats.total }}</span>
+        <span class="apmt-stat-card__delta apmt-stat-card__delta--up">+12 this week</span>
+      </div>
+    </div>
+    <div class="apmt-stat-card">
+      <div class="apmt-stat-card__icon apmt-stat-card__icon--scheduled">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+      </div>
+      <div class="apmt-stat-card__body">
+        <span class="apmt-stat-card__label">Scheduled</span>
+        <span class="apmt-stat-card__value">{{ stats.scheduled }}</span>
+        <span class="apmt-stat-card__delta apmt-stat-card__delta--up">+5 today</span>
+      </div>
+    </div>
+    <div class="apmt-stat-card">
+      <div class="apmt-stat-card__icon apmt-stat-card__icon--completed">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <div class="apmt-stat-card__body">
+        <span class="apmt-stat-card__label">Completed</span>
+        <span class="apmt-stat-card__value">{{ stats.completed }}</span>
+        <span class="apmt-stat-card__delta apmt-stat-card__delta--up">+8 this week</span>
+      </div>
+    </div>
+    <div class="apmt-stat-card">
+      <div class="apmt-stat-card__icon apmt-stat-card__icon--cancelled">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
+        </svg>
+      </div>
+      <div class="apmt-stat-card__body">
+        <span class="apmt-stat-card__label">Cancelled</span>
+        <span class="apmt-stat-card__value">{{ stats.cancelled }}</span>
+        <span class="apmt-stat-card__delta apmt-stat-card__delta--down">-2 vs last week</span>
+      </div>
+    </div>
+    <div class="apmt-stat-card">
+      <div class="apmt-stat-card__icon apmt-stat-card__icon--revenue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+      </div>
+      <div class="apmt-stat-card__body">
+        <span class="apmt-stat-card__label">Revenue</span>
+        <span class="apmt-stat-card__value">₹{{ "{:,.0f}".format(stats.revenue or 0) }}</span>
+        <span class="apmt-stat-card__delta apmt-stat-card__delta--up">+18% this month</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="apmt-controls">
+    <div class="apmt-search-wrap">
+      <svg class="apmt-search-wrap__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input type="text" id="appointmentSearch" class="apmt-search-wrap__input"
+        placeholder="Search customer, staff, service, payment…" autocomplete="off" />
+      <span class="apmt-search-wrap__clear" id="searchClear" title="Clear">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </span>
+    </div>
+
+    <div class="apmt-filters">
+      <div class="apmt-filter-group">
+        <label class="apmt-filter-group__label">Status</label>
+        <div class="apmt-select-wrap">
+          <select id="filterStatus" class="apmt-select">
+            <option value="">All Status</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="in_progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="apmt-filter-group">
+        <label class="apmt-filter-group__label">Payment</label>
+        <div class="apmt-select-wrap">
+          <select id="filterPayment" class="apmt-select">
+            <option value="">All Payment</option>
+            <option value="pending">Pending</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+            <option value="refunded">Refunded</option>
+          </select>
+        </div>
+      </div>
+      <div class="apmt-filter-group">
+        <label class="apmt-filter-group__label">Staff</label>
+        <div class="apmt-select-wrap">
+          <select id="filterStaff" class="apmt-select">
+            <option value="">All Staff</option>
+            {% for staff in staff_list %}
+<option value="{{ staff.staff_name|lower }}">
+    {{ staff.staff_name }}
+</option>
+{% endfor %}
+          </select>
+        </div>
+      </div>
+      <button class="apmt-btn apmt-btn--ghost" id="clearFilters">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10" />
+          <path d="M3.51 15a9 9 0 1 0 .49-3.5" />
+        </svg>
+        Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="apmt-table-wrap">
+    <table class="apmt-table" id="appointmentTable">
+      <thead class="apmt-table__head">
+        <tr>
+          <th class="apmt-table__th">Customer</th>
+          <th class="apmt-table__th">Service</th>
+          <th class="apmt-table__th">Staff</th>
+          <th class="apmt-table__th">Date &amp; Time</th>
+          <th class="apmt-table__th">Status</th>
+          <th class="apmt-table__th">Payment</th>
+          <th class="apmt-table__th apmt-table__th--actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="apmt-table__body" id="tableBody">
+
+        {% if appointments %}
+        {% for apmt in appointments %}
+        <tr class="apmt-table__row" data-id="{{ apmt.id }}" data-booking="{{ apmt.booking_id }}"
+          data-customer="{{ apmt.customer_name }}" data-phone="{{ apmt.customer_phone }}"
+          data-service="{{ apmt.service_name }}" data-staff="{{  apmt.staff_name|lower|trim }}" data-date="{{ apmt.date }}"
+          data-time="{{ apmt.start_time }}" data-end="{{ apmt.end_time }}" data-status="{{ apmt.status | lower }}"
+          data-payment="{{ apmt.payment_status | lower }}" data-amount="{{ apmt.amount }}">
+          <td class="apmt-table__td">
+            <div class="apmt-customer">
+              <span class="apmt-customer__avatar">{{ apmt.customer_name[0] | upper }}</span>
+              <div>
+                <span class="apmt-customer__name">{{ apmt.customer_name }}</span>
+                <span class="apmt-customer__phone">{{ apmt.customer_phone }}</span>
+              </div>
+            </div>
+          </td>
+          <td class="apmt-table__td">{{ apmt.service_name }}</td>
+          <td class="apmt-table__td">{{ apmt.staff_name }}</td>
+          <td class="apmt-table__td">
+            <span class="apmt-date">{{ apmt.date }}</span>
+            <span class="apmt-time">{{ apmt.start_time }}</span>
+          </td>
+
+          <td class="apmt-table__td">
+            <span class="apmt-badge apmt-badge--{{ apmt.status }}">
+              {{  apmt.status.replace('_', ' ').title() }}
+            </span>
+          </td>
+
+          <td class="apmt-table__td">
+            <span class="apmt-badge apmt-badge--pay-{{ apmt.payment_status }}">
+              {{ apmt.payment_status.title() }}
+            </span>
+          </td>
+
+          <td class="apmt-table__td apmt-table__td--actions">
+            <button class="apmt-action-btn apmt-action-btn--view" onclick="openViewModal(this)">View</button>
+            <button class="apmt-action-btn apmt-action-btn--edit" onclick="openEditModal(this)">Edit</button>
+          </td>
+          
+        </tr>
+        {% endfor %}
+        {% else %}
+        <!-- Demo rows -->
+        <tr class="apmt-table__row" data-id="A001" data-booking="BK-10241" data-customer="Kavya Menon"
+          data-phone="+91 98765 43210" data-service="Hair Coloring" data-staff="Priya Sharma" data-date="04 Jun 2025"
+          data-time="10:00 AM" data-end="11:30 AM" data-status="completed" data-payment="paid" data-amount="3200">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">K</span>
+              <div><span class="apmt-customer__name">Kavya Menon</span><span class="apmt-customer__phone">+91 98765
+                  43210</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Hair Coloring</td>
+          <td class="apmt-table__td">Priya Sharma</td>
+          <td class="apmt-table__td"><span class="apmt-date">04 Jun 2025</span><span class="apmt-time">10:00 AM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--completed">Completed</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-paid">Paid</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A002" data-booking="BK-10242" data-customer="Sneha Iyer"
+          data-phone="+91 91234 56789" data-service="Bridal Makeup" data-staff="Meera Nair" data-date="05 Jun 2025"
+          data-time="09:00 AM" data-end="12:00 PM" data-status="confirmed" data-payment="pending" data-amount="8500">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">S</span>
+              <div><span class="apmt-customer__name">Sneha Iyer</span><span class="apmt-customer__phone">+91 91234
+                  56789</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Bridal Makeup</td>
+          <td class="apmt-table__td">Meera Nair</td>
+          <td class="apmt-table__td"><span class="apmt-date">05 Jun 2025</span><span class="apmt-time">09:00 AM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--confirmed">Confirmed</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-pending">Pending</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A003" data-booking="BK-10243" data-customer="Ritika Joshi"
+          data-phone="+91 87654 32101" data-service="Deep Conditioning" data-staff="Riya Patel" data-date="05 Jun 2025"
+          data-time="11:00 AM" data-end="12:00 PM" data-status="scheduled" data-payment="pending" data-amount="1200">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">R</span>
+              <div><span class="apmt-customer__name">Ritika Joshi</span><span class="apmt-customer__phone">+91 87654
+                  32101</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Deep Conditioning</td>
+          <td class="apmt-table__td">Riya Patel</td>
+          <td class="apmt-table__td"><span class="apmt-date">05 Jun 2025</span><span class="apmt-time">11:00 AM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--scheduled">Scheduled</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-pending">Pending</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A004" data-booking="BK-10244" data-customer="Pooja Reddy"
+          data-phone="+91 99887 66554" data-service="Keratin Treatment" data-staff="Anjali Desai"
+          data-date="06 Jun 2025" data-time="02:00 PM" data-end="04:00 PM" data-status="scheduled" data-payment="paid"
+          data-amount="5500">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">P</span>
+              <div><span class="apmt-customer__name">Pooja Reddy</span><span class="apmt-customer__phone">+91 99887
+                  66554</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Keratin Treatment</td>
+          <td class="apmt-table__td">Anjali Desai</td>
+          <td class="apmt-table__td"><span class="apmt-date">06 Jun 2025</span><span class="apmt-time">02:00 PM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--scheduled">Scheduled</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-paid">Paid</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A005" data-booking="BK-10245" data-customer="Ananya Singh"
+          data-phone="+91 76543 21098" data-service="Facial + Clean-up" data-staff="Priya Sharma"
+          data-date="06 Jun 2025" data-time="03:30 PM" data-end="04:30 PM" data-status="cancelled"
+          data-payment="refunded" data-amount="900">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">A</span>
+              <div><span class="apmt-customer__name">Ananya Singh</span><span class="apmt-customer__phone">+91 76543
+                  21098</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Facial + Clean-up</td>
+          <td class="apmt-table__td">Priya Sharma</td>
+          <td class="apmt-table__td"><span class="apmt-date">06 Jun 2025</span><span class="apmt-time">03:30 PM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--cancelled">Cancelled</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-refunded">Refunded</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A006" data-booking="BK-10246" data-customer="Divya Kulkarni"
+          data-phone="+91 82345 67890" data-service="Nail Art" data-staff="Meera Nair" data-date="07 Jun 2025"
+          data-time="12:00 PM" data-end="01:00 PM" data-status="confirmed" data-payment="paid" data-amount="750">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">D</span>
+              <div><span class="apmt-customer__name">Divya Kulkarni</span><span class="apmt-customer__phone">+91 82345
+                  67890</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Nail Art</td>
+          <td class="apmt-table__td">Meera Nair</td>
+          <td class="apmt-table__td"><span class="apmt-date">07 Jun 2025</span><span class="apmt-time">12:00 PM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--confirmed">Confirmed</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-paid">Paid</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A007" data-booking="BK-10247" data-customer="Nisha Verma"
+          data-phone="+91 93456 78901" data-service="Hair Spa" data-staff="Riya Patel" data-date="07 Jun 2025"
+          data-time="10:30 AM" data-end="11:30 AM" data-status="completed" data-payment="paid" data-amount="2100">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">N</span>
+              <div><span class="apmt-customer__name">Nisha Verma</span><span class="apmt-customer__phone">+91 93456
+                  78901</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Hair Spa</td>
+          <td class="apmt-table__td">Riya Patel</td>
+          <td class="apmt-table__td"><span class="apmt-date">07 Jun 2025</span><span class="apmt-time">10:30 AM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--completed">Completed</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-paid">Paid</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A008" data-booking="BK-10248" data-customer="Sunita Rao"
+          data-phone="+91 84567 89012" data-service="Waxing Full Body" data-staff="Anjali Desai" data-date="08 Jun 2025"
+          data-time="01:00 PM" data-end="02:30 PM" data-status="scheduled" data-payment="pending" data-amount="1800">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">S</span>
+              <div><span class="apmt-customer__name">Sunita Rao</span><span class="apmt-customer__phone">+91 84567
+                  89012</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Waxing Full Body</td>
+          <td class="apmt-table__td">Anjali Desai</td>
+          <td class="apmt-table__td"><span class="apmt-date">08 Jun 2025</span><span class="apmt-time">01:00 PM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--scheduled">Scheduled</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-pending">Pending</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A009" data-booking="BK-10249" data-customer="Geeta Pillai"
+          data-phone="+91 95678 90123" data-service="Threading + Tint" data-staff="Priya Sharma" data-date="08 Jun 2025"
+          data-time="04:00 PM" data-end="04:45 PM" data-status="confirmed" data-payment="failed" data-amount="400">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">G</span>
+              <div><span class="apmt-customer__name">Geeta Pillai</span><span class="apmt-customer__phone">+91 95678
+                  90123</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Threading + Tint</td>
+          <td class="apmt-table__td">Priya Sharma</td>
+          <td class="apmt-table__td"><span class="apmt-date">08 Jun 2025</span><span class="apmt-time">04:00 PM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--confirmed">Confirmed</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-failed">Failed</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        <tr class="apmt-table__row" data-id="A010" data-booking="BK-10250" data-customer="Lakshmi Nambiar"
+          data-phone="+91 86789 01234" data-service="Hair Cut + Style" data-staff="Meera Nair" data-date="09 Jun 2025"
+          data-time="11:00 AM" data-end="12:00 PM" data-status="scheduled" data-payment="paid" data-amount="650">
+          <td class="apmt-table__td">
+            <div class="apmt-customer"><span class="apmt-customer__avatar">L</span>
+              <div><span class="apmt-customer__name">Lakshmi Nambiar</span><span class="apmt-customer__phone">+91 86789
+                  01234</span></div>
+            </div>
+          </td>
+          <td class="apmt-table__td">Hair Cut + Style</td>
+          <td class="apmt-table__td">Meera Nair</td>
+          <td class="apmt-table__td"><span class="apmt-date">09 Jun 2025</span><span class="apmt-time">11:00 AM</span>
+          </td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--scheduled">Scheduled</span></td>
+          <td class="apmt-table__td"><span class="apmt-badge apmt-badge--pay-paid">Paid</span></td>
+          <td class="apmt-table__td apmt-table__td--actions"><button class="apmt-action-btn apmt-action-btn--view"
+              onclick="openViewModal(this)">View</button><button class="apmt-action-btn apmt-action-btn--edit"
+              onclick="openEditModal(this)">Edit</button></td>
+        </tr>
+        {% endif %}
+
+      </tbody>
+    </table>
+    <div class="apmt-table-empty" id="tableEmpty" style="display:none;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <p>No appointments match your filters.</p>
+    </div>
+  </div>
+
+</div><!-- end apmt-page -->
+
+
+<!-- View Modal -->
+<div class="apmt-modal-overlay" id="viewModalOverlay">
+  <div class="apmt-modal" id="viewModal" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+    <div class="apmt-modal__header">
+      <div>
+        <h2 class="apmt-modal__title" id="viewModalTitle">Appointment Details</h2>
+        <p class="apmt-modal__subtitle" id="viewModalBookingId">Booking ID: —</p>
+      </div>
+      <button class="apmt-modal__close" id="closeViewModal" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div class="apmt-modal__body">
+      <div class="apmt-modal__section">
+        <span class="apmt-modal__section-label">Customer Information</span>
+        <div class="apmt-modal__grid">
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Name</span><span
+              class="apmt-modal__field-val" id="vm_customer">—</span></div>
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Phone</span><span
+              class="apmt-modal__field-val" id="vm_phone">—</span></div>
+        </div>
+      </div>
+      <div class="apmt-modal__section">
+        <span class="apmt-modal__section-label">Appointment Information</span>
+        <div class="apmt-modal__grid">
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Service</span><span
+              class="apmt-modal__field-val" id="vm_service">—</span></div>
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Staff</span><span
+              class="apmt-modal__field-val" id="vm_staff">—</span></div>
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Date</span><span
+              class="apmt-modal__field-val" id="vm_date">—</span></div>
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Time</span><span
+              class="apmt-modal__field-val" id="vm_time">—</span></div>
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Status</span><span
+              class="apmt-modal__field-val" id="vm_status">—</span></div>
+        </div>
+      </div>
+      <div class="apmt-modal__section">
+        <span class="apmt-modal__section-label">Payment Information</span>
+        <div class="apmt-modal__grid">
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Payment Status</span><span
+              class="apmt-modal__field-val" id="vm_payment">—</span></div>
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Amount</span><span
+              class="apmt-modal__field-val" id="vm_amount">—</span></div>
+        </div>
+      </div>
+      <div class="apmt-modal__section">
+        <span class="apmt-modal__section-label">Reference IDs</span>
+        <div class="apmt-modal__grid">
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Booking ID</span><span
+              class="apmt-modal__field-val apmt-mono" id="vm_booking">—</span></div>
+          <div class="apmt-modal__field"><span class="apmt-modal__field-key">Appointment ID</span><span
+              class="apmt-modal__field-val apmt-mono" id="vm_id">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="apmt-modal-overlay" id="editModalOverlay">
+  <div class="apmt-modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="apmt-modal__header">
+      <div>
+        <h2 class="apmt-modal__title" id="editModalTitle">Edit Appointment</h2>
+        <p class="apmt-modal__subtitle" id="editModalBookingId">Booking ID: —</p>
+      </div>
+      <button class="apmt-modal__close" id="closeEditModal" aria-label="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+    </div>
+    <div class="apmt-modal__body">
+      <form id="editForm" onsubmit="return false;">
+        <input type="hidden" id="edit_apmt_id">
+        <div class="apmt-form-row">
+          <div class="apmt-form-group">
+            <label class="apmt-form-label" for="edit_date">Date</label>
+            <input type="date" id="edit_date" class="apmt-form-input">
+          </div>
+          <div class="apmt-form-group">
+            <label class="apmt-form-label" for="edit_start">Start Time</label>
+            <input type="time" id="edit_start" class="apmt-form-input">
+          </div>
+          <div class="apmt-form-group">
+            <label class="apmt-form-label" for="edit_end">End Time</label>
+            <input type="time" id="edit_end" class="apmt-form-input">
+          </div>
+        </div>
+        <div class="apmt-form-row">
+          <div class="apmt-form-group">
+            <label class="apmt-form-label" for="edit_staff">Staff</label>
+            <select id="edit_staff" class="apmt-form-input">
+              <option>Priya Sharma</option>
+              <option>Meera Nair</option>
+              <option>Riya Patel</option>
+              <option>Anjali Desai</option>
+            </select>
+          </div>
+          <div class="apmt-form-group">
+            <label class="apmt-form-label" for="edit_status">Status</label>
+            <select id="edit_status" class="apmt-form-input">
+              <option value="scheduled">Scheduled</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="apmt-modal__footer">
+      <button class="apmt-btn apmt-btn--ghost" id="cancelEditBtn">Cancel</button>
+      <button class="apmt-btn apmt-btn--primary" id="saveEditBtn">Save Changes</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/appointment/admin_appointments.js') }}"></script>
+{% endblock %}

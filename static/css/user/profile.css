@@ -1,0 +1,231 @@
+
+.profile-section {
+min-height: 100vh;
+padding: 140px 0 80px;
+background:
+radial-gradient(
+circle at top right,
+rgba(108, 92, 231, 0.12),
+transparent 35%
+),
+radial-gradient(
+circle at top left,
+rgba(253, 121, 168, 0.08),
+transparent 30%
+),
+#0f0f13;
+}
+
+/* ==========================================
+PROFILE CARD
+========================================== */
+
+.profile-card {
+max-width: 850px;
+margin: auto;
+
+
+background: rgba(20, 20, 25, 0.92);
+
+border: 1px solid rgba(255,255,255,0.06);
+
+border-radius: 28px;
+
+overflow: hidden;
+
+backdrop-filter: blur(18px);
+
+box-shadow:
+    0 20px 60px rgba(0,0,0,0.35),
+    0 0 40px rgba(108,92,231,0.08);
+
+
+}
+
+/* ==========================================
+HEADER
+========================================== */
+
+.profile-header {
+text-align: center;
+padding: 60px 40px;
+
+
+background:
+    linear-gradient(
+        135deg,
+        rgba(108,92,231,.18),
+        rgba(253,121,168,.12)
+    );
+
+
+}
+
+.profile-avatar {
+width: 120px;
+height: 120px;
+
+
+margin: 0 auto 24px;
+
+border-radius: 50%;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+background:
+    linear-gradient(
+        135deg,
+        #6C5CE7,
+        #FD79A8
+    );
+
+color: white;
+
+font-size: 3rem;
+
+box-shadow:
+    0 15px 35px rgba(108,92,231,.35);
+
+
+}
+
+.profile-header h2 {
+color: white;
+font-size: 2rem;
+font-weight: 700;
+margin-bottom: 10px;
+}
+
+.profile-header p {
+color: rgba(255,255,255,.7);
+margin: 0;
+font-size: 1rem;
+}
+
+/* ==========================================
+ACCOUNT CARD
+========================================== */
+
+.account-card {
+padding: 40px;
+}
+
+.account-card .row {
+row-gap: 24px;
+}
+
+.account-card label {
+display: block;
+
+
+color: rgba(255,255,255,.55);
+
+font-size: .8rem;
+
+font-weight: 600;
+
+text-transform: uppercase;
+
+letter-spacing: .08em;
+
+margin-bottom: 8px;
+
+
+}
+
+.account-card h6 {
+color: white;
+
+
+font-size: 1rem;
+
+font-weight: 500;
+
+margin: 0;
+
+padding: 14px 18px;
+
+background: rgba(255,255,255,.03);
+
+border: 1px solid rgba(255,255,255,.06);
+
+border-radius: 12px;
+
+
+}
+
+/* ==========================================
+BUTTON
+========================================== */
+
+.btn-gold {
+background:
+linear-gradient(
+135deg,
+#6C5CE7,
+#FD79A8
+);
+
+
+border: none;
+
+color: white;
+
+padding: 12px 28px;
+
+border-radius: 999px;
+
+font-weight: 600;
+
+transition: all .3s ease;
+
+box-shadow:
+    0 8px 24px rgba(108,92,231,.35);
+
+
+}
+
+.btn-gold:hover {
+transform: translateY(-3px);
+
+
+color: white;
+
+box-shadow:
+    0 14px 34px rgba(108,92,231,.45);
+
+
+}
+
+/* ==========================================
+RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+
+
+.profile-section {
+    padding: 120px 16px 60px;
+}
+
+.profile-header {
+    padding: 40px 20px;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    font-size: 2.3rem;
+}
+
+.profile-header h2 {
+    font-size: 1.6rem;
+}
+
+.account-card {
+    padding: 24px;
+}
+
+}

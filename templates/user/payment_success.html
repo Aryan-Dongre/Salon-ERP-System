@@ -1,0 +1,200 @@
+{% extends "user/base.html" %}
+
+{% block title %}
+Payment Successful
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static',
+      filename='css/user/payment_success.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="success-page">
+
+    <div class="container">
+
+        <!-- Success Header -->
+
+        <div class="success-card">
+
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <span class="success-badge">
+                Payment Successful
+            </span>
+
+            <h1>
+                Booking Confirmed
+            </h1>
+
+            <p>
+                Your payment has been successfully processed.
+                We look forward to welcoming you to our salon.
+            </p>
+
+        </div>
+
+        <!-- Booking Details -->
+
+        <div class="info-card">
+
+            <div class="section-title">
+                Booking Information
+            </div>
+
+            <div class="info-grid">
+
+                <div class="info-item">
+                    <label>Booking ID</label>
+                    <span>#{{ payment.booking_id }}</span>
+                </div>
+
+                <div class="info-item">
+                    <label>Customer Name</label>
+                    <span>{{ payment.full_name }}</span>
+                </div>
+
+                <div class="info-item">
+                    <label>Appointment Date</label>
+                    <span>{{ payment.appointment_date }}</span>
+                </div>
+
+                <div class="info-item">
+                    <label>Appointment Time</label>
+                    <span>{{ payment.start_time }}</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Services -->
+
+        <div class="info-card">
+
+            <div class="section-title">
+                Selected Services
+            </div>
+
+            <div class="services-list">
+
+                {% for service in payment.services %}
+
+                <div class="service-chip">
+                    {{ service.service_name }}
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- Payment Summary -->
+
+        <div class="info-card">
+
+            <div class="section-title">
+                Payment Summary
+            </div>
+
+            <div class="payment-summary">
+
+                <div class="summary-row">
+                    <span>Total Amount</span>
+                    <strong>
+                        ₹{{ payment.amount }}
+                    </strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Payment Method</span>
+                    <strong>
+                        {{ payment.payment_method }}
+                    </strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Status</span>
+
+                    <span class="status-success">
+                        SUCCESS
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Instructions -->
+
+        <div class="info-card">
+
+            <div class="section-title">
+                Appointment Instructions
+            </div>
+
+            <ul class="instruction-list">
+
+                <li>
+                    Arrive 10 minutes before your appointment.
+                </li>
+
+                <li>
+                    Keep your booking reference handy.
+                </li>
+
+                <li>
+                    Inform our team about any special requirements.
+                </li>
+
+                <li>
+                    Contact us if you need to reschedule.
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- Buttons -->
+
+        <div class="action-buttons">
+
+            <a href="{{ url_for('user.home') }}"
+               class="btn-primary-custom">
+
+                Back To Home
+
+            </a>
+
+            <a href="{{ url_for('user.services') }}"
+               class="btn-secondary-custom">
+
+                View Services
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<script>
+
+window.history.pushState(null, "", window.location.href);
+
+window.addEventListener("popstate", function () {
+
+    window.location.href = "{{ url_for('user.home') }}";
+
+});
+
+</script>
+
+{% endblock %}

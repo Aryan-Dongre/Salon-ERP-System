@@ -1,0 +1,449 @@
+{% extends "dashboard/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/appointment/receptionist_appointment.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ===================== PAGE WRAPPER ===================== -->
+<div class="ra-page-wrapper">
+
+  <!-- ===================== PAGE HEADER ===================== -->
+  <div class="ra-page-header">
+    <div class="ra-header-left">
+      <div class="ra-header-title-group">
+        <div class="ra-header-icon">
+          <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div>
+          <h1 class="ra-page-title">Appointment Management</h1>
+          <p class="ra-page-subtitle">Manage customer appointments efficiently</p>
+        </div>
+      </div>
+    </div>
+    <div class="ra-header-right">
+      <button class="ra-btn ra-btn-outline" id="btnTodayAppointments">
+        <i class="fas fa-calendar-day"></i>
+        <span>Today's</span>
+      </button>
+      <button class="ra-btn ra-btn-outline" id="btnUpcomingAppointments">
+        <i class="fas fa-clock"></i>
+        <span>Upcoming</span>
+      </button>
+      <button class="ra-btn ra-btn-primary" id="btnRefresh">
+        <i class="fas fa-sync-alt"></i>
+        <span>Refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== QUICK STATS ROW ===================== -->
+  <div class="ra-stats-row">
+    <div class="ra-stat-card ra-stat-total">
+      <div class="ra-stat-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="ra-stat-body">
+        <span class="ra-stat-value">{{ stats.total_today }}</span>
+        <span class="ra-stat-label">Total Today</span>
+      </div>
+      <div class="ra-stat-trend up">
+        <i class="fas fa-arrow-up"></i> 12%
+      </div>
+    </div>
+    <div class="ra-stat-card ra-stat-pending">
+      <div class="ra-stat-icon">
+        <i class="fas fa-hourglass-half"></i>
+      </div>
+      <div class="ra-stat-body">
+        <span class="ra-stat-value">{{ stats.pending }}</span>
+        <span class="ra-stat-label">  Pending </span>
+      </div>
+      <div class="ra-stat-trend neutral">
+        <i class="fas fa-minus"></i> 0%
+      </div>
+    </div>
+    <div class="ra-stat-card ra-stat-completed">
+      <div class="ra-stat-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="ra-stat-body">
+        <span class="ra-stat-value">{{ stats.completed_today }}</span>
+        <span class="ra-stat-label">Completed Today</span>
+      </div>
+      <div class="ra-stat-trend up">
+        <i class="fas fa-arrow-up"></i> 8%
+      </div>
+    </div>
+    <div class="ra-stat-card ra-stat-walkin">
+      <div class="ra-stat-icon">
+        <i class="fas fa-walking"></i>
+      </div>
+      <div class="ra-stat-body">
+        <span class="ra-stat-value"> {{ stats.walkin_customers }}</span>
+        <span class="ra-stat-label">Walk-in Customers</span>
+      </div>
+      <div class="ra-stat-trend down">
+        <i class="fas fa-arrow-down"></i> 3%
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SEARCH + FILTER SECTION ===================== -->
+  <div class="ra-filter-section">
+    <!-- Search Bar -->
+    <div class="ra-search-wrap">
+      <i class="fas fa-search ra-search-icon"></i>
+      <input type="text" id="raSearchInput" class="ra-search-input"
+        placeholder="Search by customer name, phone, appointment ID, or service..." />
+      <button class="ra-search-clear" id="raSearchClear" title="Clear search">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Filters Row -->
+    <div class="ra-filters-row">
+      <!-- Status Filter -->
+      <div class="ra-filter-group">
+        <label class="ra-filter-label">
+          <i class="fas fa-tag"></i> Status
+        </label>
+        <select class="ra-filter-select" id="filterStatus">
+          <option value="">All Status</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <!-- Date Filter -->
+      <div class="ra-filter-group">
+        <label class="ra-filter-label">
+          <i class="fas fa-calendar"></i> Date
+        </label>
+        <select class="ra-filter-select" id="filterDate">
+          <option value="">All Dates</option>
+          <option value="today">Today</option>
+          <option value="tomorrow">Tomorrow</option>
+          <option value="this_week">This Week</option>
+          <option value="custom">Custom Date</option>
+        </select>
+      </div>
+
+      <!-- Custom Date Picker (shown only when Custom Date selected) -->
+      <div class="ra-filter-group ra-custom-date-wrap" id="customDateWrap" style="display:none;">
+        <label class="ra-filter-label">
+          <i class="fas fa-calendar-alt"></i> Pick Date
+        </label>
+        <input type="date" class="ra-filter-select" id="filterCustomDate" />
+      </div>
+
+      <!-- Staff Filter -->
+      <div class="ra-filter-group">
+        <label class="ra-filter-label">
+          <i class="fas fa-user"></i> Staff
+        </label>
+        <select class="ra-filter-select" id="filterStaff">
+
+          <option value="">
+            All Staff
+          </option>
+
+          {% for staff in staff_list %}
+          <option value="{{ staff.staff_name|lower }}">
+            {{ staff.staff_name }}
+          </option>
+          {% endfor %}
+
+        </select>
+      </div>
+
+      <!-- Reset Filter -->
+      <div class="ra-filter-group ra-filter-reset-wrap">
+        <button class="ra-btn ra-btn-reset" id="btnResetFilters">
+          <i class="fas fa-undo-alt"></i>
+          Reset Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Filter Tags -->
+    <div class="ra-filter-tags" id="raFilterTags"></div>
+  </div>
+
+  <!-- ===================== RESULTS COUNT ===================== -->
+  <div class="ra-results-bar">
+    <span class="ra-results-count" id="raResultsCount">Showing <strong>{{ appointments|length }}</strong> appointments
+    </span>
+    <div class="ra-view-toggle">
+      <button class="ra-view-btn active" id="btnCardView" title="Card View">
+        <i class="fas fa-th-large"></i>
+      </button>
+      <button class="ra-view-btn" id="btnListView" title="List View">
+        <i class="fas fa-list"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== APPOINTMENT CARDS GRID ===================== -->
+
+  <div class="ra-appointments-grid" id="raAppointmentsGrid">
+
+    {% if appointments %}
+
+    {% for appointment in appointments %}
+
+    <div class="ra-appt-card
+    {% if appointment.status == 'completed' %}
+      ra-priority-completed
+    {% elif appointment.status == 'cancelled' %}
+      ra-priority-cancelled
+    {% elif appointment.status == 'in_progress' %}
+      ra-priority-urgent
+    {% else %}
+      ra-priority-pending
+    {% endif %}" data-id="{{ appointment.id }}" data-name="{{ appointment.customer_name|lower }}"
+      data-phone="{{ appointment.customer_phone }}" data-service="{{ appointment.service_name|lower }}"
+      data-status="{{ appointment.status|lower }}" data-staff="{{ appointment.staff_name|lower }}"
+      data-date="{{ appointment.date.strftime('%Y-%m-%d') }}">
+
+      <!-- CARD TOP -->
+      <div class="ra-card-top">
+
+        <span class="ra-badge ra-badge-id">
+          #APT-{{ appointment.id }}
+        </span>
+
+        <span class="ra-badge
+        {% if appointment.status == 'completed' %}
+          ra-status-completed
+        {% elif appointment.status == 'cancelled' %}
+          ra-status-cancelled
+        {% elif appointment.status == 'in_progress' %}
+          ra-status-confirmed
+        {% else %}
+          ra-status-pending
+        {% endif %}
+      ">
+          {{ appointment.status.replace('_', ' ')|title }}
+        </span>
+
+      </div>
+
+      <!-- CUSTOMER -->
+      <div class="ra-card-customer">
+
+        <div class="ra-customer-avatar">
+          {{ appointment.customer_name[:2]|upper }}
+        </div>
+
+        <div class="ra-customer-info">
+
+          <span class="ra-customer-name">
+            {{ appointment.customer_name }}
+          </span>
+
+          <span class="ra-customer-phone">
+            <i class="fas fa-phone-alt"></i>
+            {{ appointment.customer_phone }}
+          </span>
+
+        </div>
+
+        <span class="ra-booking-type ra-prebooked">
+          <i class="fas fa-calendar-check"></i>
+          Appointment
+        </span>
+
+      </div>
+
+      <!-- DETAILS -->
+      <div class="ra-card-details">
+
+        <div class="ra-detail-item">
+          <i class="fas fa-spa"></i>
+          <span>{{ appointment.service_name }}</span>
+        </div>
+
+        <div class="ra-detail-item">
+          <i class="fas fa-user-tie"></i>
+          <span>{{ appointment.staff_name }}</span>
+        </div>
+
+        <div class="ra-detail-item">
+          <i class="fas fa-calendar-day"></i>
+          <span>
+            {{ appointment.date.strftime('%d %b %Y') }}
+          </span>
+        </div>
+
+        <div class="ra-detail-item">
+          <i class="fas fa-clock"></i>
+          <span>
+            {{ appointment.start_time.strftime('%I:%M %p') }}
+          </span>
+        </div>
+
+      </div>
+
+      <!-- PAYMENT -->
+      
+
+  <!-- PAYMENT -->
+  <div class="ra-card-extras">
+
+    <span class="ra-payment-badge
+            {% if appointment.payment_status == 'success' %}
+              ra-paid
+            {% elif appointment.payment_status == 'pending' %}
+              ra-unpaid
+            {% else %}
+              ra-partial
+            {% endif %}
+          ">
+      ₹ {{ appointment.amount }}
+    </span>
+
+    <span class="ra-notes-preview">
+      <i class="fas fa-sticky-note"></i>
+      Booking ID: {{ appointment.booking_id }}
+    </span>
+
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="ra-card-actions">
+
+    <button class="ra-action-btn ra-action-view" data-id="{{ appointment.id }}">
+      <i class="fas fa-eye"></i>
+      View
+    </button>
+
+    {% if appointment.status != 'completed'
+    and appointment.status != 'cancelled' %}
+
+    <button class="ra-action-btn ra-action-confirm" data-id="{{ appointment.id }}">
+      <i class="fas fa-check"></i>
+      Confirm
+    </button>
+
+    <button class="ra-action-btn ra-action-complete" data-id="{{ appointment.id }}">
+      <i class="fas fa-flag-checkered"></i>
+      Complete
+    </button>
+
+    <button class="ra-action-btn ra-action-cancel" data-id="{{ appointment.id }}">
+      <i class="fas fa-times"></i>
+      Cancel
+    </button>
+
+    {% else %}
+
+    <button class="ra-action-btn disabled" disabled>
+      Completed
+    </button>
+
+    {% endif %}
+
+  </div>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+</div>
+
+
+
+<!-- ===================== EMPTY STATE (hidden by default) ===================== -->
+<div class="ra-empty-state" id="raEmptyState" style="display:none;">
+  <div class="ra-empty-icon">
+    <i class="fas fa-calendar-times"></i>
+  </div>
+  <h3 class="ra-empty-title">No appointments found</h3>
+  <p class="ra-empty-text">Try adjusting your search or filters to find what you're looking for.</p>
+  <button class="ra-btn ra-btn-primary" id="btnEmptyReset">
+    <i class="fas fa-undo-alt"></i> Reset Filters
+  </button>
+</div>
+
+</div><!-- /ra-page-wrapper -->
+
+
+<!-- ===================== VIEW DETAILS MODAL ===================== -->
+<div class="ra-modal-overlay" id="raViewModal" style="display:none;">
+  <div class="ra-modal-box">
+    <div class="ra-modal-header">
+      <h3 class="ra-modal-title"><i class="fas fa-calendar-alt"></i> Appointment Details</h3>
+      <button class="ra-modal-close" id="raModalClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="ra-modal-body" id="raModalBody">
+      <!-- Populated by JS -->
+      <div class="ra-modal-section">
+        <h4>Customer Information</h4>
+        <div class="ra-modal-grid">
+          <div class="ra-modal-field">
+            <label>Name</label>
+            <span>Priya Ramesh</span>
+          </div>
+          <div class="ra-modal-field">
+            <label>Phone</label>
+            <span>+91 98765 43210</span>
+          </div>
+        </div>
+      </div>
+      <div class="ra-modal-section">
+        <h4>Appointment Information</h4>
+        <div class="ra-modal-grid">
+          <div class="ra-modal-field">
+            <label>Service</label>
+            <span>Hair Cut + Blow Dry</span>
+          </div>
+          <div class="ra-modal-field">
+            <label>Staff</label>
+            <span>Meena Sharma</span>
+          </div>
+          <div class="ra-modal-field">
+            <label>Date</label>
+            <span>07 Jun 2026</span>
+          </div>
+          <div class="ra-modal-field">
+            <label>Time</label>
+            <span>10:30 AM</span>
+          </div>
+          <div class="ra-modal-field">
+            <label>Status</label>
+            <span class="ra-badge ra-status-confirmed">Confirmed</span>
+          </div>
+          <div class="ra-modal-field">
+            <label>Payment</label>
+            <span class="ra-payment-badge ra-paid">Paid</span>
+          </div>
+        </div>
+      </div>
+      <div class="ra-modal-section">
+        <h4>Notes</h4>
+        <p class="ra-modal-notes">Allergic to ammonia-based products. Handle with care.</p>
+      </div>
+    </div>
+    <div class="ra-modal-footer">
+      <button class="ra-btn ra-btn-outline" id="raModalCloseFoot">Close</button>
+      <button class="ra-btn ra-btn-primary">
+        <i class="fas fa-print"></i> Print Receipt
+      </button>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/appointment/receptionist_appointment.js') }}"></script>
+{% endblock %}

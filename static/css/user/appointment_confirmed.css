@@ -1,0 +1,411 @@
+/* ============================================================
+   Appointment Confirmed — Premium Salon Edition
+   All original class names preserved. Visual language only.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+    --gold:#D4AF37;
+    --gold-light:#f0d77a;
+    --gold-deep:#a8842a;
+    --bg:#070604;
+    --bg-rise:#0c0a07;
+    --card:#0f0d0a;
+    --card-rise:#141210;
+    --border:rgba(212,175,55,.18);
+    --border-soft:rgba(212,175,55,.10);
+    --text:#f6f1e7;
+    --muted:#9c958a;
+    --muted-dim:#6f6a61;
+
+    --font-display:'Cormorant Garamond', Georgia, serif;
+    --font-body:'Inter', -apple-system, sans-serif;
+}
+
+.confirmation-page{
+    background:
+        radial-gradient(ellipse 900px 500px at 50% -10%, rgba(212,175,55,.05), transparent),
+        var(--bg);
+    min-height:100vh;
+    padding:64px 0 80px;
+    font-family:var(--font-body);
+    color:var(--text);
+}
+
+.container{
+    max-width:760px;
+    margin:0 auto;
+    padding:0 24px;
+}
+
+/* ---------------- Success Header ---------------- */
+
+.success-card{
+    text-align:center;
+    background:
+        linear-gradient(165deg, var(--card-rise) 0%, var(--card) 60%);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:64px 50px 56px;
+    margin-bottom:28px;
+    position:relative;
+    box-shadow:0 1px 0 rgba(212,175,55,.08) inset, 0 30px 60px -30px rgba(0,0,0,.6);
+    animation:riseIn .7s cubic-bezier(.2,.8,.2,1) both;
+}
+
+/* corner ornament — quiet signature, four hairline brackets */
+.success-card::before,
+.success-card::after{
+    content:"";
+    position:absolute;
+    width:22px;
+    height:22px;
+    border-top:1px solid var(--gold);
+    border-left:1px solid var(--gold);
+    top:14px;
+    left:14px;
+    opacity:.55;
+}
+.success-card::after{
+    top:auto;
+    left:auto;
+    bottom:14px;
+    right:14px;
+    border-top:none;
+    border-left:none;
+    border-bottom:1px solid var(--gold);
+    border-right:1px solid var(--gold);
+}
+
+.success-icon{
+    width:74px;
+    height:74px;
+    margin:auto;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--gold);
+    font-size:1.35rem;
+    position:relative;
+}
+.success-icon::before{
+    content:"";
+    position:absolute;
+    inset:-8px;
+    border:1px solid var(--border-soft);
+    border-radius:50%;
+}
+
+.confirmation-badge{
+    display:inline-block;
+    margin-top:26px;
+    padding:7px 20px;
+    border-radius:2px;
+    background:transparent;
+    border:1px solid var(--gold-deep);
+    color:var(--gold-light);
+    font-weight:500;
+    font-size:.72rem;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    font-family:var(--font-body);
+}
+
+.success-card h1{
+    color:var(--text);
+    margin-top:22px;
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:2.9rem;
+    letter-spacing:.01em;
+}
+
+.success-card p{
+    color:var(--muted);
+    max-width:480px;
+    margin:14px auto 0;
+    font-size:.97rem;
+    line-height:1.7;
+    font-weight:400;
+}
+
+/* ---------------- Section Dividers / Signature ---------------- */
+
+.detail-card{
+    background:linear-gradient(165deg, var(--card-rise) 0%, var(--card) 70%);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:34px 38px;
+    margin-bottom:22px;
+    position:relative;
+    animation:riseIn .7s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.card-header{
+    margin-bottom:24px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.card-header h3{
+    color:var(--gold-light);
+    margin:0;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:.78rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    white-space:nowrap;
+}
+
+/* hairline-with-diamond rule trailing every header — the signature mark */
+.card-header::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:linear-gradient(to right, var(--border), transparent);
+}
+
+/* ---------------- Booking Details ---------------- */
+
+.detail-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:28px 24px;
+}
+
+.detail-item label{
+    display:block;
+    color:var(--muted-dim);
+    margin-bottom:9px;
+    font-size:.7rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-weight:500;
+}
+
+.detail-item span{
+    color:var(--text);
+    font-weight:500;
+    font-size:1.05rem;
+    font-family:var(--font-display);
+}
+
+.pending-badge{
+    display:inline-block;
+    background:rgba(212,175,55,.08);
+    color:var(--gold-light);
+    border:1px solid var(--border);
+    padding:6px 16px;
+    border-radius:2px;
+    font-family:var(--font-body);
+    font-size:.78rem;
+    font-weight:600;
+    letter-spacing:.04em;
+}
+
+/* ---------------- Services ---------------- */
+
+.services-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:11px;
+}
+
+.service-chip{
+    background:transparent;
+    color:var(--text);
+    border:1px solid var(--border);
+    padding:10px 20px;
+    border-radius:2px;
+    font-size:.88rem;
+    letter-spacing:.02em;
+    transition:border-color .25s ease, color .25s ease;
+}
+
+.service-chip:hover{
+    border-color:var(--gold);
+    color:var(--gold-light);
+}
+
+/* ---------------- Payment Summary ---------------- */
+
+.amount-section{
+    text-align:center;
+    padding:8px 0 4px;
+}
+
+.amount-section h2{
+    color:var(--text);
+    font-family:var(--font-display);
+    font-size:3.4rem;
+    font-weight:500;
+    margin-bottom:18px;
+    letter-spacing:.01em;
+}
+
+.payment-pill{
+    display:inline-block;
+    background:transparent;
+    color:var(--gold-light);
+    border:1px solid var(--gold-deep);
+    padding:8px 22px;
+    border-radius:2px;
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-weight:500;
+}
+
+/* ---------------- Instructions ---------------- */
+
+.info-list{
+    color:var(--muted);
+    padding-left:0;
+    list-style:none;
+    font-size:.92rem;
+    line-height:1.7;
+}
+
+.info-list li{
+    margin-bottom:14px;
+    padding-left:22px;
+    position:relative;
+}
+
+.info-list li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:9px;
+    width:5px;
+    height:5px;
+    background:var(--gold);
+    border-radius:50%;
+    opacity:.7;
+}
+
+/* ---------------- Policy ---------------- */
+
+.policy-text{
+    color:var(--muted);
+    line-height:1.85;
+    font-size:.92rem;
+    font-style:italic;
+    font-family:var(--font-display);
+}
+
+/* ---------------- Actions ---------------- */
+
+.action-buttons{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:46px;
+}
+
+.btn-home,
+.btn-services{
+    text-decoration:none;
+    padding:15px 36px;
+    border-radius:2px;
+    font-weight:600;
+    font-size:.82rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    transition:transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease, background .3s ease, color .3s ease;
+}
+
+.btn-home{
+    background:var(--gold);
+    color:#0a0806;
+    box-shadow:0 8px 24px -8px rgba(212,175,55,.35);
+}
+
+.btn-services{
+    border:1px solid var(--gold-deep);
+    color:var(--gold-light);
+    background:transparent;
+}
+
+.btn-home:hover{
+    transform:translateY(-3px);
+    box-shadow:0 14px 30px -10px rgba(212,175,55,.5);
+    background:var(--gold-light);
+}
+
+.btn-services:hover{
+    transform:translateY(-3px);
+    border-color:var(--gold);
+    background:rgba(212,175,55,.06);
+}
+
+.btn-home:focus-visible,
+.btn-services:focus-visible{
+    outline:2px solid var(--gold-light);
+    outline-offset:3px;
+}
+
+/* ---------------- Motion ---------------- */
+
+@keyframes riseIn{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.detail-card:nth-of-type(1){ animation-delay:.05s; }
+.detail-card:nth-of-type(2){ animation-delay:.1s; }
+.detail-card:nth-of-type(3){ animation-delay:.15s; }
+.detail-card:nth-of-type(4){ animation-delay:.2s; }
+
+@media (prefers-reduced-motion: reduce){
+    .success-card,
+    .detail-card{
+        animation:none;
+    }
+    .btn-home:hover,
+    .btn-services:hover{
+        transform:none;
+    }
+}
+
+/* ---------------- Responsive ---------------- */
+
+@media(max-width:768px){
+
+    .confirmation-page{
+        padding:40px 0 56px;
+    }
+
+    .success-card{
+        padding:44px 26px 40px;
+    }
+
+    .success-card h1{
+        font-size:2.1rem;
+    }
+
+    .detail-card{
+        padding:26px 22px;
+    }
+
+    .amount-section h2{
+        font-size:2.4rem;
+    }
+
+    .action-buttons{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .btn-home,
+    .btn-services{
+        text-align:center;
+    }
+}

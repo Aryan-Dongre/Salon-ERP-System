@@ -1,0 +1,663 @@
+/* 
+   0. CSS CUSTOM PROPERTIES
+ */
+:root {
+  /* Radii — mirrors manager dashboard */
+  --rcp-radius-card:  1.125rem;
+  --rcp-radius-btn:   0.75rem;
+  --rcp-radius-badge: 0.45rem;
+  --rcp-radius-pill:  999px;
+
+  /* Shadows */
+  --rcp-shadow-sm:    0 2px 12px rgba(0, 0, 0, .07);
+  --rcp-shadow-md:    0 4px 24px rgba(0, 0, 0, .10);
+  --rcp-shadow-hover: 0 8px 32px rgba(0, 0, 0, .14);
+
+  /* Transitions */
+  --rcp-ease:         0.22s ease;
+
+  /* Gradient palette — same tokens as manager */
+  --grad-blue:   linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  --grad-orange: linear-gradient(135deg, #f97316 0%, #eab308 100%);
+  --grad-purple: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  --grad-green:  linear-gradient(135deg, #16a34a 0%, #10b981 100%);
+  --grad-rose:   linear-gradient(135deg, #e11d48 0%, #7c3aed 100%);
+  --grad-indigo: linear-gradient(135deg, #4338ca 0%, #1e1b4b 100%);
+
+  /* Status tokens */
+  --confirmed-bg: #dbeafe; --confirmed-tx: #1d4ed8;
+  --pending-bg:   #fef9c3; --pending-tx:   #a16207;
+  --completed-bg: #dcfce7; --completed-tx: #15803d;
+  --cancelled-bg: #fee2e2; --cancelled-tx: #b91c1c;
+
+  /* Membership tokens */
+  --mem-gold-bg:     #fef3c7; --mem-gold-tx:     #92400e;
+  --mem-silver-bg:   #f1f5f9; --mem-silver-tx:   #475569;
+  --mem-platinum-bg: #ede9fe; --mem-platinum-tx: #5b21b6;
+  --mem-regular-bg:  #f0fdf4; --mem-regular-tx:  #166534;
+
+  /* Surface & text */
+  --surface:     #fff;
+  --surface-2:   #f8fafc;
+  --border:      #f1f5f9;
+  --text-head:   #1e293b;
+  --text-body:   #334155;
+  --text-muted:  #94a3b8;
+}
+
+/* 
+   1. PAGE HEADER
+ */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.page-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-head);
+  letter-spacing: -.01em;
+}
+
+.page-subtitle {
+  font-size: .82rem;
+  color: var(--text-muted);
+}
+
+/* Notification button */
+.rcp-notif-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: .65rem;
+  background: var(--surface);
+  color: var(--text-body);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background var(--rcp-ease), box-shadow var(--rcp-ease);
+  flex-shrink: 0;
+}
+.rcp-notif-btn:hover {
+  background: var(--surface-2);
+  box-shadow: var(--rcp-shadow-sm);
+}
+.rcp-notif-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e11d48;
+  border: 1.5px solid #fff;
+}
+
+/* Profile chip */
+.rcp-profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--rcp-radius-pill);
+  padding: .25rem .75rem .25rem .3rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text-body);
+}
+.rcp-profile-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--grad-purple);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+}
+.rcp-profile-name { color: var(--text-body); }
+
+.salon-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: .78rem;
+  font-weight: 600;
+  padding: .35rem .85rem;
+  border-radius: var(--rcp-radius-pill);
+  letter-spacing: .01em;
+}
+
+/* 
+   2. WELCOME STRIP
+ */
+.rcp-welcome-strip {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #eff6ff 0%, #f0fdf4 100%);
+  border: 1px solid #dbeafe;
+  border-radius: .85rem;
+  padding: .65rem 1.1rem;
+  font-size: .84rem;
+  color: #1e40af;
+}
+.rcp-welcome-strip strong { color: #1d4ed8; }
+
+/* 
+   3. STAT CARDS
+ */
+.rcp-stat-card {
+  border-radius: var(--rcp-radius-card);
+  padding: 1.1rem 1rem 1rem;
+  color: #fff;
+  box-shadow: var(--rcp-shadow-sm);
+  transition: transform var(--rcp-ease), box-shadow var(--rcp-ease);
+  overflow: hidden;
+  position: relative;
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: default;
+}
+
+/* Decorative circle */
+.rcp-stat-card::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .10);
+  bottom: -28px;
+  right: -20px;
+  pointer-events: none;
+}
+
+.rcp-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--rcp-shadow-hover);
+}
+
+/* Gradient variants */
+.rcp-stat--blue   { background: var(--grad-blue);   }
+.rcp-stat--orange { background: var(--grad-orange);  }
+.rcp-stat--green  { background: var(--grad-green);   }
+.rcp-stat--rose   { background: var(--grad-rose);    }
+.rcp-stat--purple { background: var(--grad-purple);  }
+.rcp-stat--indigo { background: var(--grad-indigo);  }
+
+/* Card internals */
+.rcp-stat__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: .75rem;
+  background: rgba(255, 255, 255, .18);
+  font-size: 1.35rem;
+  margin-bottom: .6rem;
+  flex-shrink: 0;
+}
+.rcp-stat__body { display: flex; flex-direction: column; gap: .15rem; }
+.rcp-stat__label {
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 0;
+  opacity: .88;
+  line-height: 1.3;
+}
+.rcp-stat__value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-bottom: 0;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+.rcp-stat__sub {
+  font-size: .72rem;
+  opacity: .80;
+  display: flex;
+  align-items: center;
+  gap: .1rem;
+  margin-top: .1rem;
+}
+
+/* Staggered entrance */
+@keyframes rcpFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+#rcpStatCards > *:nth-child(1) { animation: rcpFadeUp .35s ease .05s both; }
+#rcpStatCards > *:nth-child(2) { animation: rcpFadeUp .35s ease .10s both; }
+#rcpStatCards > *:nth-child(3) { animation: rcpFadeUp .35s ease .15s both; }
+#rcpStatCards > *:nth-child(4) { animation: rcpFadeUp .35s ease .20s both; }
+#rcpStatCards > *:nth-child(5) { animation: rcpFadeUp .35s ease .25s both; }
+#rcpStatCards > *:nth-child(6) { animation: rcpFadeUp .35s ease .30s both; }
+
+/* 
+   4. ERP CARD  (white container)
+ */
+.erp-card {
+  background: var(--surface);
+  border-radius: var(--rcp-radius-card);
+  box-shadow: var(--rcp-shadow-sm);
+  border: 1px solid var(--border);
+  padding: 1.4rem 1.4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.erp-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--border);
+}
+.erp-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-head);
+  margin-bottom: .1rem;
+  letter-spacing: -.01em;
+}
+.erp-card__subtitle {
+  font-size: .78rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+/* 
+   5. QUICK ACTIONS GRID
+ */
+.rcp-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .75rem;
+}
+
+.rcp-quick-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: 1.1rem .75rem;
+  border-radius: var(--rcp-radius-btn);
+  text-decoration: none;
+  transition: transform var(--rcp-ease), box-shadow var(--rcp-ease);
+  border: 1px solid transparent;
+  text-align: center;
+}
+.rcp-quick-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--rcp-shadow-md);
+  text-decoration: none;
+}
+
+/* Quick button variants */
+.rcp-quick--blue   { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+.rcp-quick--blue:hover   { background: #dbeafe; color: #1e40af; }
+.rcp-quick--green  { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+.rcp-quick--green:hover  { background: #dcfce7; color: #166534; }
+.rcp-quick--purple { background: #f5f3ff; border-color: #ddd6fe; color: #5b21b6; }
+.rcp-quick--purple:hover { background: #ede9fe; color: #4c1d95; }
+.rcp-quick--orange { background: #fff7ed; border-color: #fed7aa; color: #c2410c; }
+.rcp-quick--orange:hover { background: #ffedd5; color: #9a3412; }
+.rcp-quick--rose   { background: #fff1f2; border-color: #fecdd3; color: #be123c; }
+.rcp-quick--rose:hover   { background: #ffe4e6; color: #9f1239; }
+
+.rcp-quick__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: .75rem;
+  background: rgba(255, 255, 255, .8);
+  font-size: 1.25rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .07);
+  flex-shrink: 0;
+}
+.rcp-quick__label {
+  font-size: .76rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* 
+   6. APPOINTMENTS TABLE
+ */
+.erp-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface);
+}
+.erp-table thead th {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  padding: .6rem .75rem;
+  white-space: nowrap;
+  background: var(--surface);
+}
+.erp-table tbody tr {
+  transition: background var(--rcp-ease);
+  border-bottom: 1px solid #f8fafc;
+}
+.erp-table tbody tr:last-child { border-bottom: none; }
+.erp-table tbody tr:hover { background: var(--surface-2); }
+.erp-table td {
+  font-size: .83rem;
+  color: var(--text-body);
+  padding: .65rem .75rem;
+  vertical-align: middle;
+}
+
+/* Customer cell with avatar */
+.rcp-customer-cell {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  white-space: nowrap;
+}
+
+/* Avatars */
+.rcp-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: .72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+.rcp-avatar--md {
+  width: 36px;
+  height: 36px;
+  font-size: .82rem;
+}
+
+/* Staff chip */
+.rcp-staff-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: .78rem;
+  color: var(--text-body);
+  white-space: nowrap;
+}
+
+/* Time badge */
+.rcp-time-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-2);
+  color: #475569;
+  font-size: .76rem;
+  font-weight: 600;
+  padding: .2rem .55rem;
+  border-radius: .45rem;
+  white-space: nowrap;
+}
+
+/* Status badges */
+.rcp-status {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .28rem .65rem;
+  border-radius: var(--rcp-radius-badge);
+  letter-spacing: .01em;
+}
+.rcp-status--confirmed { background: var(--confirmed-bg); color: var(--confirmed-tx); }
+.rcp-status--pending   { background: var(--pending-bg);   color: var(--pending-tx);   }
+.rcp-status--completed { background: var(--completed-bg); color: var(--completed-tx); }
+.rcp-status--cancelled { background: var(--cancelled-bg); color: var(--cancelled-tx); }
+
+/* Action buttons */
+.rcp-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: .45rem;
+  font-size: .78rem;
+  text-decoration: none;
+  transition: background var(--rcp-ease), color var(--rcp-ease);
+  flex-shrink: 0;
+}
+.rcp-action-btn--view  { background: #eff6ff; color: #2563eb; }
+.rcp-action-btn--view:hover  { background: #dbeafe; color: #1d4ed8; }
+.rcp-action-btn--edit  { background: #f0fdf4; color: #16a34a; }
+.rcp-action-btn--edit:hover  { background: #dcfce7; color: #15803d; }
+
+/* Filter pills */
+.rcp-filter-pills {
+  display: flex;
+  gap: .35rem;
+  flex-wrap: wrap;
+}
+.rcp-pill {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .25rem .65rem;
+  border-radius: var(--rcp-radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--rcp-ease), color var(--rcp-ease), border-color var(--rcp-ease);
+}
+.rcp-pill:hover { background: #f1f5f9; color: var(--text-body); }
+.rcp-pill--active { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+
+/* Pagination */
+.rcp-pagination-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  padding-top: .9rem;
+  border-top: 1px solid var(--border);
+  margin-top: .25rem;
+}
+.rcp-pagination-info {
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+.rcp-pagination .page-link {
+  font-size: .78rem;
+  padding: .3rem .6rem;
+  border-radius: .45rem !important;
+  margin: 0 2px;
+  color: var(--text-body);
+  border-color: var(--border);
+  transition: background var(--rcp-ease);
+}
+.rcp-pagination .page-item.active .page-link {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+.rcp-pagination .page-link:hover:not(.disabled) {
+  background: var(--surface-2);
+}
+
+/* 
+   7. RECENT CUSTOMERS LIST
+ */
+.rcp-customers-list {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+}
+.rcp-customer-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem .25rem;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--rcp-ease);
+  border-radius: .5rem;
+}
+.rcp-customer-row:last-child { border-bottom: none; }
+.rcp-customer-row:hover { background: var(--surface-2); }
+
+.rcp-customer-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .05rem;
+  min-width: 0;
+}
+.rcp-customer-name {
+  font-size: .83rem;
+  font-weight: 700;
+  color: var(--text-head);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rcp-customer-phone,
+.rcp-customer-visit {
+  font-size: .72rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+}
+
+/* Membership badges */
+.rcp-membership {
+  font-size: .68rem;
+  font-weight: 700;
+  padding: .22rem .55rem;
+  border-radius: var(--rcp-radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.rcp-membership--gold     { background: var(--mem-gold-bg);     color: var(--mem-gold-tx);     }
+.rcp-membership--silver   { background: var(--mem-silver-bg);   color: var(--mem-silver-tx);   }
+.rcp-membership--platinum { background: var(--mem-platinum-bg); color: var(--mem-platinum-tx); }
+.rcp-membership--regular  { background: var(--mem-regular-bg);  color: var(--mem-regular-tx);  }
+
+/* 
+   8. EMPTY STATE
+ */
+.rcp-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+.rcp-empty-state__icon {
+  font-size: 2.8rem;
+  color: #cbd5e1;
+  margin-bottom: .75rem;
+  display: block;
+}
+.rcp-empty-state__title {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--text-body);
+  margin-bottom: .25rem;
+}
+.rcp-empty-state__sub {
+  font-size: .78rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+/* 
+   9. RESPONSIVE — Tablet (≤ 991px)
+ */
+@media (max-width: 991.98px) {
+
+  .rcp-stat__value { font-size: 1.45rem; }
+
+  .erp-card { padding: 1.1rem 1rem .9rem; }
+
+  /* Quick actions: 3 columns on tablet */
+  .rcp-quick-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .rcp-filter-pills { display: none !important; }
+
+  .rcp-pagination-wrap { flex-direction: column; align-items: flex-start; }
+
+}
+
+/* 
+   10. RESPONSIVE — Mobile (≤ 575px)
+ */
+@media (max-width: 575.98px) {
+
+  .page-header { flex-direction: column; align-items: flex-start; }
+  .header-actions { flex-wrap: wrap; }
+  .salon-badge { display: none; }
+
+  .rcp-welcome-strip { font-size: .78rem; padding: .55rem .85rem; }
+
+  .rcp-stat-card {
+    min-height: 128px;
+    padding: .9rem .85rem .8rem;
+  }
+  .rcp-stat__icon-wrap { width: 38px; height: 38px; font-size: 1.1rem; }
+  .rcp-stat__value     { font-size: 1.3rem; }
+  .rcp-stat__label     { font-size: .68rem; }
+  .rcp-stat__sub       { font-size: .68rem; }
+
+  /* Quick actions: 2 columns on mobile */
+  .rcp-quick-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .erp-card { padding: 1rem .9rem .85rem; }
+  .erp-card__header { flex-direction: column; }
+
+  /* Table: show fewer columns via selective hiding */
+  .erp-table thead th:nth-child(4),
+  .erp-table tbody td:nth-child(4) {
+    display: none; /* hide Assigned Staff on small mobile */
+  }
+
+  /* Customer row compact */
+  .rcp-customer-phone { display: none; } /* hide phone on very small screens */
+
+  .rcp-pagination-wrap { flex-direction: column; align-items: flex-start; gap: .5rem; }
+
+  .rcp-profile-name { display: none !important; }
+
+}

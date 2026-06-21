@@ -1,0 +1,408 @@
+:root {
+    --gold: #C9A96E;
+    --gold-light: #E2C98A;
+    --gold-dark: #A07840;
+    --obsidian: #0D0D0D;
+    --charcoal: #1A1A1A;
+    --slate: #252525;
+    --mist: #E8E2D9;
+    --parchment: #F5F0E8;
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(201, 169, 110, 0.18);
+    --shadow-gold: rgba(201, 169, 110, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+
+    min-height: 100vh;
+    background: linear-gradient(
+        135deg,
+        #0D0D0D 0%,
+        #161616 50%,
+        #1A1A1A 100%
+    );
+}
+
+/* Ambient background */
+body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    left: -20%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, rgba(201, 169, 110, 0.06) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -20%;
+    right: -15%;
+    width: 55vw;
+    height: 55vw;
+    background: radial-gradient(circle, rgba(201, 169, 110, 0.04) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.auth-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 2rem 1rem;
+}
+
+/* Card */
+.card {
+    background: #181818 !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(201,169,110,0.18);
+    border-radius: 20px;
+    box-shadow:
+        0 0 0 1px rgba(201,169,110,0.07),
+        0 32px 80px rgba(0,0,0,0.55),
+        0 0 60px rgba(201,169,110,0.12);
+    overflow: hidden;
+}
+
+/* Brand strip */
+.salon-brand {
+    background: linear-gradient(135deg, #1C1509 0%, #2A1F08 50%, #1C1509 100%);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 2rem 2rem 1.6rem;
+    text-align: center;
+    position: relative;
+}
+
+.salon-brand::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+}
+
+.brand-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 0 24px rgba(201, 169, 110, 0.35);
+}
+
+.brand-icon i {
+    color: var(--obsidian);
+    font-size: 1.3rem;
+}
+
+.brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold-light);
+    font-size: 1.55rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+}
+
+.brand-tagline {
+    color: rgba(232, 226, 217, 0.45);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+/* Card body */
+.card-body-inner {
+    padding: 2rem 2.2rem 2.2rem;
+}
+
+.page-heading {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--mist);
+    font-size: 1.35rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.3rem;
+    text-align: center;
+}
+
+.page-subheading {
+    color: rgba(232, 226, 217, 0.38);
+    font-size: 0.75rem;
+    text-align: center;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.6rem;
+}
+
+/* Flash messages */
+.alert {
+    border-radius: 10px;
+    font-size: 0.83rem;
+    border: none;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.15);
+    color: #f4a0a8;
+    border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+.alert-success {
+    background: rgba(40, 167, 69, 0.12);
+    color: #82d9a0;
+    border: 1px solid rgba(40, 167, 69, 0.25);
+}
+
+.alert-warning {
+    background: rgba(255, 193, 7, 0.12);
+    color: #f5d87a;
+    border: 1px solid rgba(255, 193, 7, 0.25);
+}
+
+.alert-info {
+    background: rgba(13, 202, 240, 0.10);
+    color: #7dcfdf;
+    border: 1px solid rgba(13, 202, 240, 0.2);
+}
+
+.btn-close {
+    filter: invert(1) brightness(0.6);
+}
+
+/* Form labels */
+.form-label {
+    color: rgba(232, 226, 217, 0.65);
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.45rem;
+}
+
+/* Inputs */
+.form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(201, 169, 110, 0.2) !important;
+    color: var(--mist) !important;
+    border-radius: 10px !important;
+    padding: 0.72rem 1rem !important;
+    font-size: 0.9rem !important;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+}
+
+.form-control::placeholder {
+    color: rgba(232, 226, 217, 0.25) !important;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12) !important;
+    outline: none !important;
+}
+
+.input-group .form-control {
+    border-right: none !important;
+    border-radius: 10px 0 0 10px !important;
+}
+
+.input-icon-left .form-control {
+    padding-left: 2.6rem !important;
+}
+
+/* Input with icon left */
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap .input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold-dark);
+    font-size: 0.85rem;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.input-wrap .form-control {
+    padding-left: 2.5rem !important;
+}
+
+/* Password toggle button */
+.toggle-pwd {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(201, 169, 110, 0.2);
+    border-left: none;
+    color: rgba(201, 169, 110, 0.55);
+    border-radius: 0 10px 10px 0;
+    padding: 0 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.toggle-pwd:hover {
+    color: var(--gold);
+    background: rgba(201, 169, 110, 0.08);
+}
+
+/* Forgot password */
+.forgot-link {
+    color: rgba(201, 169, 110, 0.6);
+    font-size: 0.76rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    letter-spacing: 0.03em;
+}
+
+.forgot-link:hover {
+    color: var(--gold);
+    text-decoration: underline;
+}
+
+/* Primary button */
+.btn-primary {
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 60%, var(--gold-light) 100%);
+    border: none;
+    color: var(--obsidian);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 10px;
+    padding: 0.78rem 1rem;
+    transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 20px rgba(201, 169, 110, 0.28);
+}
+
+.btn-primary:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(201, 169, 110, 0.38);
+    color: var(--obsidian);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 1.4rem 0;
+    color: rgba(232, 226, 217, 0.22);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.2), transparent);
+}
+
+/* Google button */
+.btn-google {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+
+    color: white !important;
+    border-radius: 10px;
+
+    padding: 0.7rem 1rem;
+    font-size: 0.84rem;
+    letter-spacing: 0.04em;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+.btn-google:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.28) !important;
+    color: white !important;
+}
+
+.btn-google:focus,
+.btn-google:active {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.30) !important;
+
+    box-shadow:
+        0 0 0 3px rgba(201,169,110,0.12) !important;
+
+    outline: none !important;
+}
+
+.btn-google img {
+    width: 17px;
+    height: 17px;
+    margin-right: 0.5rem;
+}
+
+/* Footer link */
+.auth-footer {
+    text-align: center;
+    margin-top: 1.6rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(201, 169, 110, 0.1);
+    font-size: 0.78rem;
+    color: rgba(232, 226, 217, 0.35);
+}
+
+.auth-footer a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+    .card-body-inner {
+        padding: 1.5rem 1.2rem 1.8rem;
+    }
+
+    .salon-brand {
+        padding: 1.5rem 1.2rem 1.3rem;
+    }
+}

@@ -1,0 +1,411 @@
+{% extends "user/base.html" %}
+
+{% block title %}
+Contact Us
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static',
+      filename='css/user/contact.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ================= HERO ================= -->
+
+<section class="contact-hero">
+
+    <div class="hero-glow"></div>
+
+    <div class="container">
+
+        <div class="hero-inner">
+
+            <span class="eyebrow fade-up" style="--d:0s">
+                Contact Us
+            </span>
+
+            <h1 class="fade-up" style="--d:.1s">
+                Experience Luxury, Comfort
+                <span class="serif-em">&amp; Professional Care</span>
+            </h1>
+
+            <p class="fade-up" style="--d:.2s">
+                Whether you're booking an appointment, requesting
+                information, or simply saying hello — we'd love to
+                hear from you.
+            </p>
+
+            <div class="hero-actions fade-up" style="--d:.3s">
+
+                <a href="{{ url_for('user.appointment') }}"
+                   class="btn-gold-fill">
+                    Book Appointment
+                </a>
+
+                <a href="tel:+91XXXXXXXXXX"
+                   class="btn-gold-outline">
+                    <i class="fas fa-phone"></i>
+                    Call Now
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= CONTACT INFO ================= -->
+
+<section class="info-section">
+
+    <div class="container">
+
+        <div class="info-grid">
+
+            <div class="info-card fade-up" style="--d:0s">
+                <div class="info-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <h3>Phone</h3>
+                <p>+91 XXXXX XXXXX</p>
+            </div>
+
+            <div class="info-card fade-up" style="--d:.08s">
+                <div class="info-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>Email</h3>
+                <p>hello@salon.com</p>
+            </div>
+
+            <div class="info-card fade-up" style="--d:.16s">
+                <div class="info-icon">
+                    <i class="fas fa-location-dot"></i>
+                </div>
+                <h3>Address</h3>
+                <p>123 Luxury Street<br>Mumbai, Maharashtra</p>
+            </div>
+
+            <div class="info-card fade-up" style="--d:.24s">
+                <div class="info-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Hours</h3>
+                <p>Mon&ndash;Sat<br>9:00 AM &ndash; 8:00 PM</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= CONTACT FORM ================= -->
+
+<section class="form-section">
+
+    <div class="container">
+
+        <div class="form-split">
+
+            <div class="form-panel fade-up">
+
+                <span class="section-eyebrow">Get In Touch</span>
+                <h2>Send Us A Message</h2>
+                <p class="form-intro">
+                    Fill in your details and our team will reach
+                    out within one business day.
+                </p>
+
+                <form class="luxury-form" method="POST"
+                      action="{{ url_for('user.contact') }}">
+
+                    <div class="form-row">
+
+                        <div class="field-group">
+                            <input type="text" id="full_name"
+                                   name="full_name" required
+                                   placeholder=" ">
+                            <label for="full_name">Full Name</label>
+                        </div>
+
+                        <div class="field-group">
+                            <input type="email" id="email"
+                                   name="email" required
+                                   placeholder=" ">
+                            <label for="email">Email Address</label>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="field-group">
+                            <input type="tel" id="phone"
+                                   name="phone" required
+                                   placeholder=" ">
+                            <label for="phone">Phone Number</label>
+                        </div>
+
+                        <div class="field-group">
+                            <input type="text" id="subject"
+                                   name="subject" required
+                                   placeholder=" ">
+                            <label for="subject">Subject</label>
+                        </div>
+
+                    </div>
+
+                    <div class="field-group">
+                        <textarea id="message" name="message"
+                                  rows="5" required
+                                  placeholder=" "></textarea>
+                        <label for="message">Message</label>
+                    </div>
+
+                    <button type="submit" class="btn-gold-fill btn-submit">
+                        Send Message
+                    </button>
+
+                </form>
+
+            </div>
+
+            <div class="form-decor">
+
+                <div class="decor-frame">
+
+                    <span class="decor-mark">&#10070;</span>
+
+                    <p class="decor-quote">
+                        Every visit is an appointment with yourself
+                        &mdash; a quiet hour set aside for care,
+                        craft, and a little luxury.
+                    </p>
+
+                    <span class="decor-rule"></span>
+
+                    <span class="decor-sign">The Salon</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= BUSINESS HOURS ================= -->
+
+<section class="hours-section">
+
+    <div class="container">
+
+        <div class="section-head fade-up">
+            <span class="section-eyebrow">Visit Us</span>
+            <h2>Business Hours</h2>
+        </div>
+
+        <div class="hours-card fade-up">
+
+            <ul class="hours-list">
+
+                <li><span class="day">Monday</span><span class="time">9 AM &ndash; 8 PM</span></li>
+                <li><span class="day">Tuesday</span><span class="time">9 AM &ndash; 8 PM</span></li>
+                <li><span class="day">Wednesday</span><span class="time">9 AM &ndash; 8 PM</span></li>
+                <li><span class="day">Thursday</span><span class="time">9 AM &ndash; 8 PM</span></li>
+                <li><span class="day">Friday</span><span class="time">9 AM &ndash; 8 PM</span></li>
+                <li><span class="day">Saturday</span><span class="time">9 AM &ndash; 8 PM</span></li>
+                <li class="closed"><span class="day">Sunday</span><span class="time">Closed</span></li>
+
+            </ul>
+
+            <div class="hours-notes">
+                <span><i class="fas fa-door-open"></i> Walk-ins Welcome</span>
+                <span><i class="fas fa-calendar-check"></i> Advance Booking Recommended</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= FAQ ================= -->
+
+<section class="faq-section">
+
+    <div class="container">
+
+        <div class="section-head fade-up">
+            <span class="section-eyebrow">Good To Know</span>
+            <h2>Frequently Asked Questions</h2>
+        </div>
+
+        <div class="faq-accordion fade-up">
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    How do I book an appointment?
+                    <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Book directly through our Appointment page,
+                        call the salon, or send a message here and
+                        our team will confirm a slot that works for you.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What payment methods are accepted?
+                    <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        We accept cards, UPI, and cash at the salon
+                        counter. You may also choose Pay At Salon
+                        while booking online.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Can I cancel my appointment?
+                    <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Yes, appointments can be cancelled or
+                        rescheduled up to 24 hours before your slot.
+                        Late cancellations may be subject to salon policy.
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Do you accept walk-ins?
+                    <span class="faq-toggle"><i class="fas fa-plus"></i></span>
+                </button>
+                <div class="faq-answer">
+                    <p>
+                        Walk-ins are welcome whenever a stylist is
+                        available, though advance booking guarantees
+                        your preferred time.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= LOCATION ================= -->
+
+<!-- <section class="location-section">
+
+    <div class="container">
+
+        <div class="section-head fade-up">
+            <span class="section-eyebrow">Find Us</span>
+            <h2>Our Location</h2>
+        </div>
+
+        <div class="map-frame fade-up">
+
+            <div class="map-placeholder">
+                <i class="fas fa-map-location-dot"></i>
+                <p>Map preview will appear here</p>
+            </div>
+
+            <div class="map-info">
+                <h4>Visit The Salon</h4>
+                <p>123 Luxury Street, Mumbai, Maharashtra</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section> -->
+
+<!-- ================= FINAL CTA ================= -->
+
+<section class="final-cta">
+
+    <div class="cta-glow"></div>
+
+    <div class="container">
+
+        <div class="cta-inner fade-up">
+
+            <h2>Ready For Your Next Transformation?</h2>
+
+            <p>
+                Book your appointment today and experience
+                premium salon services.
+            </p>
+
+            <a href="{{ url_for('user.appointment') }}"
+               class="btn-gold-fill btn-large">
+                Book Appointment
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Accordion
+    document.querySelectorAll('.faq-question').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var item = btn.closest('.faq-item');
+            var isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item').forEach(function (el) {
+                el.classList.remove('open');
+                el.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            });
+
+            if (!isOpen) {
+                item.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+    // Reveal on scroll
+    var revealEls = document.querySelectorAll('.fade-up');
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+
+    revealEls.forEach(function (el) { observer.observe(el); });
+
+});
+</script>
+{% endblock %}

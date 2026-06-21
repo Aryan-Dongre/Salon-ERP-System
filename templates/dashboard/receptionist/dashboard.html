@@ -1,0 +1,407 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Receptionist Dashboard — Salon ERP{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/receptionist_dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER-->
+<div class="page-header mb-4">
+  <div>
+    <h4 class="page-title mb-1">Receptionist Dashboard</h4>
+    <p class="page-subtitle mb-0">
+      <i class="bi bi-calendar3 me-1"></i>
+      <span id="rcp-live-date">{{ current_date | default("Monday, 02 June 2026") }}</span>
+    </p>
+  </div>
+  <div class="header-actions d-flex align-items-center gap-2">
+    <button class="rcp-notif-btn" id="rcpNotifBtn" title="Notifications" aria-label="Notifications">
+      <i class="bi bi-bell"></i>
+      <span class="rcp-notif-dot"></span>
+    </button>
+    <div class="rcp-profile-chip">
+      <span class="rcp-profile-avatar">
+        {{ current_user.name[0] | upper if current_user is defined else "R" }}
+      </span>
+      <span class="rcp-profile-name d-none d-sm-inline">
+        {{ current_user.name if current_user is defined else "Receptionist" }}
+      </span>
+    </div>
+    <span class="salon-badge">
+      <i class="bi bi-reception-4 me-1"></i>Reception
+    </span>
+  </div>
+</div>
+
+<!-- Welcome strip -->
+<div class="rcp-welcome-strip mb-4">
+  <i class="bi bi-stars me-2"></i>
+  Welcome back, <strong>{{ current_user.name if current_user is defined else "Receptionist" }}</strong> — Have a great
+  shift today!
+</div>
+
+<!-- 
+     STAT CARDS  (6 cards, responsive grid)
+ -->
+<div class="row g-3 mb-4" id="rcpStatCards">
+
+  <!-- 1. Total Appointments Today -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="rcp-stat-card rcp-stat--blue">
+      <div class="rcp-stat__icon-wrap"><i class="bi bi-calendar-check-fill"></i></div>
+      <div class="rcp-stat__body">
+        <p class="rcp-stat__label">Today's Appointments</p>
+        <h3 class="rcp-stat__value" data-target="{{ todays_appointments or 0 }}"> {{ todays_appointments or 0 }}</h3>
+        <span class="rcp-stat__sub"><i class="bi bi-arrow-up-short"></i>5 more than yesterday</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Pending Appointments -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="rcp-stat-card rcp-stat--orange">
+      <div class="rcp-stat__icon-wrap"><i class="bi bi-hourglass-split"></i></div>
+      <div class="rcp-stat__body">
+        <p class="rcp-stat__label">Pending Appointments</p>
+        <h3 class="rcp-stat__value" data-target="{{ pending_appointment or 0 }}"> {{ pending_appointment or 0 }}</h3>
+        <span class="rcp-stat__sub"><i class="bi bi-clock me-1"></i>Needs confirmation</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Confirmed Bookings -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="rcp-stat-card rcp-stat--green">
+      <div class="rcp-stat__icon-wrap"><i class="bi bi-check-circle-fill"></i></div>
+      <div class="rcp-stat__body">
+        <p class="rcp-stat__label">Confirmed Bookings</p>
+        <h3 class="rcp-stat__value" data-target="{{ confirmed_bookings or 0 }}"> {{ confirmed_bookings or 0 }}</h3>
+        <span class="rcp-stat__sub"><i class="bi bi-check2-all me-1"></i>All set for today</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Walk-in Customers -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="rcp-stat-card rcp-stat--rose">
+      <div class="rcp-stat__icon-wrap"><i class="bi bi-person-walking"></i></div>
+      <div class="rcp-stat__body">
+        <p class="rcp-stat__label">Walk-in Customers</p>
+        <h3 class="rcp-stat__value" data-target="{{ walkin_customers or 0 }}"> {{ walkin_customers or 0 }}</h3>
+        <span class="rcp-stat__sub"><i class="bi bi-door-open me-1"></i>Today's drop-ins</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Today's Revenue -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="rcp-stat-card rcp-stat--purple">
+      <div class="rcp-stat__icon-wrap"><i class="bi bi-currency-rupee"></i></div>
+      <div class="rcp-stat__body">
+        <p class="rcp-stat__label">Today's Revenue</p>
+        <h3 class="rcp-stat__value" data-target="{{ todays_revenue or 0 }}" data-prefix="₹" data-format="indian">₹{{
+          todays_revenue or 0 }}</h3>
+        <span class="rcp-stat__sub"><i class="bi bi-graph-up-arrow me-1"></i>+8% vs yesterday</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. New Customers -->
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="rcp-stat-card rcp-stat--indigo">
+      <div class="rcp-stat__icon-wrap"><i class="bi bi-person-plus-fill"></i></div>
+      <div class="rcp-stat__body">
+        <p class="rcp-stat__label">New Customers</p>
+        <h3 class="rcp-stat__value" data-target="{{ new_customers or 0 }}"> {{ new_customers or 0 }}</h3>
+        <span class="rcp-stat__sub"><i class="bi bi-star-fill me-1"></i>Registered today</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /stat cards row -->
+
+<!--  QUICK ACTIONS -->
+<div class="erp-card mb-4">
+  <div class="erp-card__header">
+    <div>
+      <h6 class="erp-card__title">Quick Actions</h6>
+      <p class="erp-card__subtitle">Manage reception tasks instantly</p>
+    </div>
+  </div>
+  <div class="rcp-quick-grid">
+
+    <a href="#" class="rcp-quick-btn rcp-quick--blue">
+      <span class="rcp-quick__icon"><i class="bi bi-calendar-plus-fill"></i></span>
+      <span class="rcp-quick__label">New Booking</span>
+    </a>
+
+    <a href="{{url_for('receptionist.customer')}}" class="rcp-quick-btn rcp-quick--green">
+      <span class="rcp-quick__icon"><i class="bi bi-person-plus-fill"></i></span>
+      <span class="rcp-quick__label">Customer</span>
+    </a>
+
+    <a href="{{ url_for('receptionist.appointment')}}" class="rcp-quick-btn rcp-quick--purple">
+      <span class="rcp-quick__icon"><i class="bi bi-calendar2-week-fill"></i></span>
+      <span class="rcp-quick__label">View Appointments</span>
+    </a>
+
+    <a href="{{ url_for('receptionist.receptionist_staff')}}" class="rcp-quick-btn rcp-quick--orange">
+      <span class="rcp-quick__icon"><i class="bi bi-receipt-cutoff"></i></span>
+      <span class="rcp-quick__label">Staff</span>
+    </a>
+
+  </div>
+</div>
+
+<!-- APPOINTMENTS TABLE  +  RECENT CUSTOMERS-->
+<div class="row g-3 mb-4">
+
+  <!-- ── LEFT: Today's Appointments Table ─────── -->
+  <div class="col-12 col-xl-8">
+    <div class="erp-card h-100">
+      <div class="erp-card__header">
+        <div>
+          <h6 class="erp-card__title">Today's Appointments</h6>
+          <p class="erp-card__subtitle">Full schedule for today</p>
+        </div>
+        <div class="erp-card__actions d-flex gap-2 align-items-center">
+          <!-- Status filter pills -->
+          <div class="rcp-filter-pills d-none d-md-flex">
+            <button class="rcp-pill rcp-pill--active" data-filter="all">All</button>
+            <button class="rcp-pill" data-filter="pending">Pending</button>
+            <button class="rcp-pill" data-filter="confirmed">Confirmed</button>
+            <button class="rcp-pill" data-filter="completed">Completed</button>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary rounded-3" id="rcpRefreshTable" title="Refresh">
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table class="table erp-table align-middle mb-0" id="rcpAppointmentTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Customer Name</th>
+              <th>Service</th>
+              <th>Assigned Staff</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            {% if appointments %}
+
+            {% for appt in appointments %}
+
+            <tr>
+
+              <!-- Serial Number -->
+              <td class="text-muted">
+                {{ loop.index }}
+              </td>
+
+              <!-- Customer -->
+              <td>
+                <div class="rcp-customer-cell">
+                  <span class="rcp-avatar">
+                    {{ appt[0][0] | upper }}
+                  </span>
+                  <span>{{ appt[0] }}</span>
+                </div>
+              </td>
+
+              <!-- Service -->
+              <td>
+                {{ appt[1] }}
+              </td>
+
+              <!-- Staff -->
+              <td>
+                <span class="rcp-staff-chip">
+                  <i class="bi bi-person-circle me-1"></i>
+                  {{ appt[2] }}
+                </span>
+              </td>
+
+              <!-- Time -->
+              <td>
+                <span class="rcp-time-badge">
+                  <i class="bi bi-clock me-1"></i>
+                  {{ appt[3] }}
+                </span>
+              </td>
+
+              <!-- Status -->
+              <td>
+
+                {% if appt[4]|lower == 'confirmed' %}
+
+                <span class="badge rcp-status rcp-status--confirmed">
+                  Confirmed
+                </span>
+
+                {% elif appt[4]|lower == 'pending' %}
+
+                <span class="badge rcp-status rcp-status--pending">
+                  Pending
+                </span>
+
+                {% elif appt[4]|lower == 'completed' %}
+
+                <span class="badge rcp-status rcp-status--completed">
+                  Completed
+                </span>
+
+                {% else %}
+
+                <span class="badge rcp-status rcp-status--cancelled">
+                  Cancelled
+                </span>
+
+                {% endif %}
+
+              </td>
+
+              <!-- Actions -->
+              <td>
+                <div class="d-flex gap-1">
+
+                  <a href="#" class="rcp-action-btn rcp-action-btn--view" title="View">
+                    <i class="bi bi-eye"></i>
+                  </a>
+
+                  <a href="#" class="rcp-action-btn rcp-action-btn--edit" title="Edit">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+
+                </div>
+              </td>
+
+            </tr>
+
+            {% endfor %}
+
+            {% else %}
+
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted">
+                No appointments found for today
+              </td>
+            </tr>
+
+            {% endif %}
+
+          </tbody>
+
+        </table>
+
+        <!-- Empty state (hidden by default, shown via JS if no rows) -->
+        <div class="rcp-empty-state d-none" id="rcpEmptyAppts">
+          <i class="bi bi-calendar-x rcp-empty-state__icon"></i>
+          <p class="rcp-empty-state__title">No appointments found</p>
+          <p class="rcp-empty-state__sub">No appointments match the selected filter.</p>
+        </div>
+
+      </div><!-- /table-responsive -->
+
+      <!-- Pagination UI -->
+      <div class="rcp-pagination-wrap">
+        <span class="rcp-pagination-info">Showing <strong>1–10</strong> of <strong>{{ total_appointments | default(28)
+            }}</strong> appointments</span>
+        <nav aria-label="Appointments pagination">
+          <ul class="pagination rcp-pagination mb-0">
+            <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+          </ul>
+        </nav>
+      </div>
+
+    </div><!-- /erp-card appointments -->
+  </div>
+
+  <!-- ── RIGHT: Recent Customers ──────────────── -->
+  <!-- ── RIGHT: Recent Customers ──────────────── -->
+  <div class="col-12 col-xl-4">
+
+    <div class="erp-card h-100">
+
+      <div class="erp-card__header">
+        <div>
+          <h6 class="erp-card__title">Recent Customers</h6>
+          <p class="erp-card__subtitle">Latest customer registrations</p>
+        </div>
+      </div>
+
+      <div class="rcp-customers-list">
+
+        {% if recent_customers %}
+
+        {% for cust in recent_customers %}
+        <div class="rcp-customer-row">
+
+          <span class="rcp-avatar rcp-avatar--md">
+            {{ cust[0][0] | upper }}
+          </span>
+
+          <div class="rcp-customer-info">
+
+            <strong class="rcp-customer-name">
+              {{ cust[0] }}
+            </strong>
+
+            <span class="rcp-customer-phone">
+              <i class="bi bi-telephone me-1"></i>
+              {{ cust[1] }}
+            </span>
+
+            <span class="rcp-customer-visit">
+              <i class="bi bi-clock-history me-1"></i>
+              {{ cust[2] }}
+            </span>
+
+          </div>
+
+          <span class="rcp-membership rcp-membership--regular">
+            Regular
+          </span>
+
+        </div>
+        {% endfor %}
+
+        {% else %}
+
+        <div class="rcp-empty-state">
+          <i class="bi bi-people rcp-empty-state__icon"></i>
+
+          <p class="rcp-empty-state__title">
+            No recent customers
+          </p>
+
+          <p class="rcp-empty-state__sub">
+            Customer records will appear here.
+          </p>
+        </div>
+
+        {% endif %}
+
+      </div>
+
+    </div>
+
+  </div>
+  {% endblock %}
+
+  {% block extra_js %}
+  <script src="{{ url_for('static', filename='js/dashboard/receptionist_dashboard.js') }}"></script>
+  {% endblock %}

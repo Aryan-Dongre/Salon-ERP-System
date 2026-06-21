@@ -1,0 +1,376 @@
+{% extends "dashboard/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/customer/admin_customer.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="cm-page">
+
+  <!-- ── Page Header ─────────────────────────────────────── -->
+  <div class="cm-page__header">
+    <div class="cm-page__header-text">
+      <h1 class="cm-page__title">Customer Management</h1>
+      <p class="cm-page__subtitle">Manage and monitor salon customers</p>
+    </div>
+  </div>
+
+  <!-- ── Stats Cards ─────────────────────────────────────── -->
+  <div class="cm-stats">
+
+    <div class="cm-stat-card cm-stat-card--teal">
+      <div class="cm-stat-card__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="cm-stat-card__body">
+        <span class="cm-stat-card__label">Total Customers</span>
+        <span class="cm-stat-card__value">{{ card.total_customers }}</span>
+      </div>
+      <div class="cm-stat-card__trend">
+        <span class="cm-stat-card__trend-dot cm-stat-card__trend-dot--up"></span>
+        <span class="cm-stat-card__trend-text">+12% this month</span>
+      </div>
+    </div>
+
+    <div class="cm-stat-card cm-stat-card--rose">
+      <div class="cm-stat-card__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.8" />
+          <path d="M16 11l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="cm-stat-card__body">
+        <span class="cm-stat-card__label">Registered Users</span>
+        <span class="cm-stat-card__value">{{ card.registered_users }}</span>
+      </div>
+      <div class="cm-stat-card__trend">
+        <span class="cm-stat-card__trend-dot cm-stat-card__trend-dot--up"></span>
+        <span class="cm-stat-card__trend-text">+8% this month</span>
+      </div>
+    </div>
+
+    <div class="cm-stat-card cm-stat-card--violet">
+      <div class="cm-stat-card__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" />
+          <path d="M22 4 12 14.01l-3-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <div class="cm-stat-card__body">
+        <span class="cm-stat-card__label">Active Clients</span>
+        <span class="cm-stat-card__value">{{ card.active_clients }}</span>
+      </div>
+      <div class="cm-stat-card__trend">
+        <span class="cm-stat-card__trend-dot cm-stat-card__trend-dot--up"></span>
+        <span class="cm-stat-card__trend-text">+5% this month</span>
+      </div>
+    </div>
+
+    <div class="cm-stat-card cm-stat-card--amber">
+      <div class="cm-stat-card__icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="1.8" />
+          <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </div>
+      <div class="cm-stat-card__body">
+        <span class="cm-stat-card__label">Visited Customers</span>
+        <span class="cm-stat-card__value">{{ card.visited_customers }}</span>
+      </div>
+      <div class="cm-stat-card__trend">
+        <span class="cm-stat-card__trend-dot cm-stat-card__trend-dot--down"></span>
+        <span class="cm-stat-card__trend-text">-2% this month</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Search + Filter ─────────────────────────────────── -->
+  <div class="cm-toolbar">
+    <div class="cm-toolbar__search">
+      <svg class="cm-toolbar__search-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true">
+        <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6" />
+        <path d="M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+      <input class="cm-toolbar__input" type="search" id="js-searchInput"
+        placeholder="Search customer by name, phone or email…" autocomplete="off" aria-label="Search customers" />
+    </div>
+    <div class="cm-toolbar__filters">
+      <select class="cm-toolbar__select" id="js-statusFilter" aria-label="Filter by status">
+        <option value="">All Status</option>
+        <option value="REGISTERED">REGISTERED</option>
+        <option value="CLIENT">CLIENT</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ── Customer Table ──────────────────────────────────── -->
+  <div class="cm-table-wrap">
+    <table class="cm-table" id="js-customerTable">
+      <thead class="cm-table__head">
+        <tr>
+          <th class="cm-table__th">Customer</th>
+          <th class="cm-table__th">Email</th>
+          <th class="cm-table__th">Phone</th>
+          <th class="cm-table__th">Provider</th>
+          <th class="cm-table__th">Status</th>
+          <th class="cm-table__th">Last Visit</th>
+          <th class="cm-table__th">Joined</th>
+          <th class="cm-table__th cm-table__th--action">Action</th>
+        </tr>
+      </thead>
+      <tbody class="cm-table__body" id="js-tableBody">
+
+        {% if customers %}
+
+        {% for customer in customers %}
+
+        <tr class="cm-table__row" data-name="{{ customer.full_name }}" 
+        data-email="{{ customer.email }}"
+          data-phone="{{ customer.phone }}" 
+          data-provider="{{ customer.login_provider }}"
+          data-status="{{ customer.customer_status }}"
+          data-last-visit="{% if customer.last_visit_date %}{{ customer.last_visit_date.strftime('%d %b %Y') }}
+          {% else %}
+          No Visit Yet
+          {% endif %}"
+          data-joined="{{ customer.created_at.strftime('%d %b %Y') }}">
+
+          <!-- Customer -->
+          <td class="cm-table__td">
+            <div class="cm-customer">
+
+              {% if customer.profile_image %}
+              <img src="{{ customer.profile_image }}" alt="{{ customer.full_name }}" class="cm-customer__avatar">
+              {% else %}
+              <div class="cm-customer__avatar cm-customer__avatar--a">
+                {{ customer.full_name[:2].upper() }}
+              </div>
+              {% endif %}
+
+              <span class="cm-customer__name">
+                {{ customer.full_name }}
+              </span>
+
+            </div>
+          </td>
+
+          <!-- Email -->
+          <td class="cm-table__td cm-table__td--email">
+            {{ customer.email }}
+          </td>
+
+          <!-- Phone -->
+          <td class="cm-table__td">
+            {{ customer.phone }}
+          </td>
+
+          <!-- Provider -->
+          <td class="cm-table__td">
+            <span class="cm-badge
+                    {% if customer.login_provider == 'GOOGLE' %}
+                        cm-badge--google
+                    {% else %}
+                        cm-badge--email
+                    {% endif %}
+                ">
+              {{ customer.login_provider }}
+            </span>
+          </td>
+
+          <!-- Status -->
+          <td class="cm-table__td">
+            <span class="cm-badge
+                    {% if customer.customer_status == 'CLIENT' %}
+                        cm-badge--client
+                    {% else %}
+                        cm-badge--registered
+                    {% endif %}
+                ">
+              {{ customer.customer_status }}
+            </span>
+          </td>
+
+          <!-- Last Visit -->
+          <td class="cm-table__td
+                {% if not customer.last_visit_date %}
+                    cm-table__td--muted
+                {% endif %}
+            ">
+            {% if customer.last_visit_date %}
+            {{ customer.last_visit_date.strftime('%d %b %Y') }}
+            {% else %}
+            No Visit Yet
+            {% endif %}
+          </td>
+
+          <!-- Joined -->
+          <td class="cm-table__td">
+            {{ customer.created_at.strftime('%d %b %Y') }}
+          </td>
+
+          <!-- Action -->
+          <td class="cm-table__td cm-table__td--action">
+            <button class="cm-btn cm-btn--view js-viewBtn" type="button">
+              View
+            </button>
+          </td>
+
+        </tr>
+
+        {% endfor %}
+
+        {% else %}
+
+        <tr>
+          <td colspan="8" class="customer-empty-row">
+            No customers found
+          </td>
+        </tr>
+
+        {% endif %}
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Empty State (hidden by default) ────────────────── -->
+  <div class="cm-empty" id="js-emptyState" aria-hidden="true">
+    <div class="cm-empty__icon-wrap">
+      <svg class="cm-empty__icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="40" cy="40" r="38" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4" />
+        <path d="M28 38a12 12 0 1 1 24 0" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+        <circle cx="40" cy="30" r="7" stroke="currentColor" stroke-width="2.2" />
+        <path d="M20 58c0-8.84 8.96-16 20-16s20 7.16 20 16" stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" />
+        <path d="M30 52l4 4 10-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+          stroke-linejoin="round" opacity="0.4" />
+      </svg>
+    </div>
+    <h3 class="cm-empty__title">No customers found</h3>
+    <p class="cm-empty__subtitle">Try adjusting your search or filter to find what you're looking for.</p>
+  </div>
+
+</div><!-- /cm-page -->
+
+<!-- ── View Customer Modal ─────────────────────────────── -->
+<div class="cm-modal-overlay" id="js-modalOverlay" aria-hidden="true" role="dialog" aria-modal="true"
+  aria-labelledby="js-modalTitle">
+  <div class="cm-modal">
+
+    <div class="cm-modal__header">
+      <h2 class="cm-modal__title" id="js-modalTitle">Customer Details</h2>
+      <button class="cm-modal__close" id="js-closeModal" type="button" aria-label="Close modal">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="cm-modal__body">
+
+      <div class="cm-modal__profile">
+        <div class="cm-modal__avatar" id="js-modalAvatar">PS</div>
+        <div class="cm-modal__profile-info">
+          <h3 class="cm-modal__customer-name" id="js-modalName">Priya Sharma</h3>
+          <span class="cm-badge cm-badge--client" id="js-modalStatusBadge">CLIENT</span>
+        </div>
+      </div>
+
+      <div class="cm-modal__divider"></div>
+
+      <dl class="cm-modal__details">
+
+        <div class="cm-modal__detail-row">
+          <dt class="cm-modal__detail-label">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path
+                d="M14 11.667c0 .306-.067.606-.2.9a3.4 3.4 0 0 1-.546.867c-.32.373-.673.633-1.074.78C11.78 14.405 11.4 14.5 11 14.5a6.56 6.56 0 0 1-2.48-.52 13.39 13.39 0 0 1-2.387-1.413 13.28 13.28 0 0 1-2.08-2.08A13.39 13.39 0 0 1 2.64 8.1 6.48 6.48 0 0 1 2.127 5.64c0-.387.087-.76.253-1.1A3.46 3.46 0 0 1 3.167 3.5c.48-.507 1.013-.76 1.58-.76.22 0 .44.047.64.14.207.093.387.233.527.44l1.826 2.573c.14.2.247.387.32.56.073.167.113.333.113.487 0 .193-.054.387-.16.573-.1.187-.24.38-.42.573l-.573.593c-.087.087-.127.193-.127.32 0 .067.007.127.02.194.02.066.04.12.054.173.14.253.38.587.72 1 .347.413.713.833 1.113 1.253.413.42.807.793 1.207 1.147.407.346.747.58 1.007.72.047.013.1.033.16.046a.72.72 0 0 0 .2.027.48.48 0 0 0 .334-.134l.573-.566c.2-.2.393-.346.58-.44.186-.106.373-.16.573-.16.153 0 .313.034.487.107.173.073.36.18.553.32l2.6 1.846c.207.14.347.307.44.507.086.2.133.413.133.64Z"
+                stroke="currentColor" stroke-width="1.2" stroke-miterlimit="10" />
+            </svg>
+            Phone
+          </dt>
+          <dd class="cm-modal__detail-value" id="js-modalPhone">+91 98201 43210</dd>
+        </div>
+
+        <div class="cm-modal__detail-row">
+          <dt class="cm-modal__detail-label">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path
+                d="M13.333 2.667H2.667c-.734 0-1.334.6-1.334 1.333v8c0 .733.6 1.333 1.334 1.333h10.666c.734 0 1.334-.6 1.334-1.333V4c0-.733-.6-1.333-1.334-1.333Z"
+                stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M1.333 4l6.667 4.667L14.667 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            Email
+          </dt>
+          <dd class="cm-modal__detail-value" id="js-modalEmail">priya.sharma@gmail.com</dd>
+        </div>
+
+        <div class="cm-modal__detail-row">
+          <dt class="cm-modal__detail-label">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="8" cy="8" r="6.667" stroke="currentColor" stroke-width="1.2" />
+              <path d="M8 4.667v3.666l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            Login Provider
+          </dt>
+          <dd class="cm-modal__detail-value" id="js-modalProvider">
+            <span class="cm-badge cm-badge--google">GOOGLE</span>
+          </dd>
+        </div>
+
+        <div class="cm-modal__detail-row">
+          <dt class="cm-modal__detail-label">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="1.333" y="2.667" width="13.333" height="12" rx="1.333" stroke="currentColor"
+                stroke-width="1.2" />
+              <path d="M10.667 1.333V4M5.333 1.333V4M1.333 6.667h13.333" stroke="currentColor" stroke-width="1.2"
+                stroke-linecap="round" />
+            </svg>
+            Last Visit
+          </dt>
+          <dd class="cm-modal__detail-value" id="js-modalLastVisit">12 Jun 2025</dd>
+        </div>
+
+        <div class="cm-modal__detail-row">
+          <dt class="cm-modal__detail-label">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M8 1.333a6.667 6.667 0 1 0 0 13.334A6.667 6.667 0 0 0 8 1.333Z" stroke="currentColor"
+                stroke-width="1.2" />
+              <path d="M8 4v4l2.667 2.667" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+            Joined Date
+          </dt>
+          <dd class="cm-modal__detail-value" id="js-modalJoined">03 Jan 2024</dd>
+        </div>
+
+      </dl>
+    </div>
+
+    <div class="cm-modal__footer">
+      <button class="cm-btn cm-btn--ghost" id="js-closeModalFooter" type="button">Close</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/customer/admin_customer.js') }}"></script>
+{% endblock %}

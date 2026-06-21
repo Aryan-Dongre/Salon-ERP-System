@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Booking</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/user/payment.css') }}">
+</head>
+
+<body>
+
+  <header class="topbar">
+    <div class="container">
+      <div class="topbar__row">
+        <a href="{{url_for('user.home') }}" class="brand-mark">
+          <span class="brand-mark__crest">A</span>
+          <span class="brand-mark__text">Salon ERP</span>
+
+        </a>
+
+        <a href="{{ url_for('user.appointment') }}" class="btn btn-back">
+          <i class="bi bi-arrow-left"></i>
+          <span>Back</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-fade-in">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="container mt-3">
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+
+    <!--  HERO  -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero__inner">
+          <p class="hero__eyebrow">Step 3 of 3 &mdash; Payment</p>
+          <h1 class="hero__title">Complete Your Booking</h1>
+          <p class="hero__subtitle">Secure your appointment with a seamless payment experience.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container page-content">
+      <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+
+          <!--  BOOKING VOUCHER (SIGNATURE ELEMENT)  -->
+          <section class="voucher" aria-labelledby="voucherHeading">
+            <div class="voucher__edge" aria-hidden="true"></div>
+            <div class="voucher__body">
+
+              <div class="voucher__head">
+                <div>
+                  <p class="voucher__label">Appointment Voucher</p>
+                  <h2 class="voucher__id">No. {{ payment.booking_id }}</h2>
+                </div>
+                <span class="voucher__status">
+                  <i class="bi bi-circle-fill"></i> Awaiting Payment
+                </span>
+              </div>
+
+              <div class="voucher__grid">
+                <div class="voucher__field">
+                  <span class="voucher__field-label">Guest Name</span>
+                  <span class="voucher__field-value">{{ payment.full_name }}</span>
+                </div>
+                <div class="voucher__field">
+                  <span class="voucher__field-label">Appointment Date</span>
+                  <span class="voucher__field-value">{{ payment.appointment_date }}</span>
+                </div>
+                <div class="voucher__field">
+                  <span class="voucher__field-label">Appointment Time</span>
+                  <span class="voucher__field-value">
+                    {{ payment.start_time.strftime('%I:%M %p') if payment.start_time else '' }}
+                  </span>
+                </div>
+
+                <div class="voucher__field">
+                  <span class="voucher__field-label">Services Booked</span>
+                  <span class="voucher__field-value">{{ payment.services|length }} Services</span>
+                </div>
+
+              </div>
+
+              <div class="voucher__perforation" role="presentation">
+                <span class="voucher__notch voucher__notch--left" aria-hidden="true"></span>
+                <span class="voucher__dashes" aria-hidden="true"></span>
+                <span class="voucher__notch voucher__notch--right" aria-hidden="true"></span>
+              </div>
+
+              <div class="voucher__foot">
+                <p class="voucher__foot-note">
+                  <i class="bi bi-shield-check"></i>
+                  Held for you for the next <strong>15 minutes</strong>
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <!--Service part-->
+          <section class="section-block" aria-labelledby="servicesHeading">
+            <div class="section-heading">
+              <h3 class="section-heading__title">Your Selected Services</h3>
+              <span class="section-heading__rule" aria-hidden="true"></span>
+            </div>
+
+
+            <div class="services-grid">
+              {% for service in payment.services %}
+              <article class="service-card">
+                <div class="service-card__icon">
+                  <i class="bi bi-flower1"></i>
+                </div>
+                <div class="service-card__body">
+                  <h4 class="service-card__name">{{ service.service_name }}</h4>
+                  <p class="service-card__duration">
+                    <i class="bi bi-clock"></i> {{ service.duration_minutes }} min
+                  </p>
+                </div>
+                <div class="service-card__price">₹{{ "%.2f"|format(service.price_snapshot) }}</div>
+              </article>
+              {% endfor %}
+            </div>
+          </section>
+
+          <form method="POST" action="{{ url_for('user.process_payment', booking_id=payment.booking_id) }}">
+            <div class="row gx-4 gy-4 align-items-start payment-row">
+
+              <!--  LEFT: PAYMENT METHODS-->
+              <div class="col-12 col-lg-7">
+
+                <!--  PAYMENT METHOD SELECTION  -->
+                <section class="section-block" aria-labelledby="paymentMethodHeading">
+                  <div class="section-heading">
+                    <h3 class="section-heading__title">Choose Payment Method</h3>
+                    <span class="section-heading__rule" aria-hidden="true"></span>
+                  </div>
+
+                  <div class="payment-options" role="radiogroup" aria-label="Payment method">
+
+                    <label class="payment-option payment-option--selected" tabindex="0">
+                      <input class="payment-option__radio" type="radio" name="payment_method" value="ONLINE" checked>
+                      <span class="payment-option__icon">
+                        <i class="bi bi-credit-card-2-front"></i>
+                      </span>
+                      <span class="payment-option__text">
+                        <span class="payment-option__title">
+                          Pay Online
+                          <span class="payment-option__badge">Recommended</span>
+                        </span>
+                        <span class="payment-option__desc">Cards, UPI, Netbanking &amp; Wallets via Razorpay</span>
+                      </span>
+                      <span class="payment-option__check" aria-hidden="true">
+                        <i class="bi bi-check-lg"></i>
+                      </span>
+                    </label>
+
+                    <label class="payment-option" tabindex="0">
+                      <input class="payment-option__radio" type="radio" name="payment_method" value="CASH">
+                      <span class="payment-option__icon">
+                        <i class="bi bi-shop"></i>
+                      </span>
+                      <span class="payment-option__text">
+                        <span class="payment-option__title">
+                          Pay At Salon
+                          <span class="payment-option__badge">Available</span>
+                        </span>
+                        <span class="payment-option__desc">Settle your bill in person after your appointment</span>
+                      </span>
+                      <span class="payment-option__check" aria-hidden="true">
+                        <i class="bi bi-check-lg"></i>
+                      </span>
+                    </label>
+
+                  </div>
+                </section>
+
+                <!--TRUST / SECURITY  -->
+                <section class="trust-card" aria-labelledby="trustHeading">
+                  <h3 class="trust-card__title">
+                    <i class="bi bi-shield-lock"></i> Your Payment is Protected
+                  </h3>
+                  <div class="trust-grid">
+                    <div class="trust-item">
+                      <i class="bi bi-lock"></i>
+                      <span>SSL Secured</span>
+                    </div>
+                    <div class="trust-item">
+                      <i class="bi bi-patch-check"></i>
+                      <span>Razorpay Protected</span>
+                    </div>
+                    <div class="trust-item">
+                      <i class="bi bi-shield-check"></i>
+                      <span>Safe Transactions</span>
+                    </div>
+                    <div class="trust-item">
+                      <i class="bi bi-lightning-charge"></i>
+                      <span>Instant Confirmation</span>
+                    </div>
+                  </div>
+                </section>
+
+              </div>
+
+              <!--  RIGHT: PRICE BREAKDOWN + CTA  -->
+              <div class="col-12 col-lg-5">
+                <aside class="summary-card">
+                  <h3 class="summary-card__title">Price Summary</h3>
+
+
+
+                  <div class="summary-divider" aria-hidden="true"></div>
+
+                  <div class="summary-total">
+                    <span class="summary-total__label">
+                      Total Amount
+                    </span>
+
+                    <span class="summary-total__value">
+                      ₹{{ "{:,.2f}".format(payment.amount) }}
+                    </span>
+                  </div>
+
+                  <button type="submit" class="btn btn-pay-now" id="payNowBtn">
+
+                    <span class="btn-pay-now__shine" aria-hidden="true">
+                    </span>
+
+                    <i class="bi bi-shield-lock-fill"></i>
+
+                    <span id="payButtonText">
+                      Pay Securely Now
+                    </span>
+
+                  </button>
+
+                  <p class="summary-card__assurance">
+                    <i class="bi bi-info-circle"></i>
+                    By proceeding, you agree to our cancellation &amp; refund policy. A confirmation will be sent to
+                    your email and phone instantly.
+                  </p>
+                </aside>
+              </div>
+
+            </div>
+          </form>
+
+          <footer class="page-footer">
+            <div class="page-footer__badges">
+              <span><i class="bi bi-shield-check"></i> 256-bit Encryption</span>
+              <span><i class="bi bi-award"></i> PCI DSS Compliant</span>
+              <span><i class="bi bi-headset"></i> 24/7 Guest Support</span>
+            </div>
+            <p class="page-footer__note">Salon ERP &middot; Crafted for your
+              comfort, every visit.</p>
+          </footer>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/user/payment.js') }}"></script>
+</body>
+
+</html>

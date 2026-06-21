@@ -1,0 +1,292 @@
+{% extends 'dashboard/base.html' %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/appointment/staff_appointment.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="appt-page">
+
+  <!-- Page Header -->
+  <div class="appt-page-header">
+    <div class="appt-page-header__left">
+      <h1 class="appt-page-title">Appointments</h1>
+      <p class="appt-page-subtitle">Manage your scheduled appointments</p>
+    </div>
+    <div class="appt-page-header__right">
+      <div class="appt-summary-chips">
+        <span class="appt-chip appt-chip--total">
+          <span class="appt-chip__dot"></span>
+          <span class="appt-chip__label">Total</span>
+          <span class="appt-chip__count">{{ appointments|length }}</span>
+        </span>
+        <span class="appt-chip appt-chip--confirmed">
+          <span class="appt-chip__dot"></span>
+          <span class="appt-chip__label">Confirmed</span>
+          <span class="appt-chip__count">{{ appointments|selectattr('status', 'equalto', 'Confirmed')|list|length
+            }}</span>
+        </span>
+        <span class="appt-chip appt-chip--pending">
+          <span class="appt-chip__dot"></span>
+          <span class="appt-chip__label">Pending</span>
+          <span class="appt-chip__count">{{ appointments|selectattr('status', 'equalto', 'Pending')|list|length
+            }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="appt-filterbar">
+    <div class="appt-filterbar__tabs" id="apptFilterTabs">
+      <button class="appt-filter-tab active" data-filter="all">All</button>
+      <button class="appt-filter-tab" data-filter="Pending">Pending</button>
+      <button class="appt-filter-tab" data-filter="Confirmed">Confirmed</button>
+      <button class="appt-filter-tab" data-filter="Completed">Completed</button>
+      <button class="appt-filter-tab" data-filter="Cancelled">Cancelled</button>
+    </div>
+    <div class="appt-filterbar__search">
+      <svg class="appt-search-icon" viewBox="0 0 20 20" fill="none">
+        <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.6" />
+        <path d="M13 13l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+      <input type="text" class="appt-search-input" id="apptSearch" placeholder="Search by customer or service…">
+    </div>
+  </div>
+
+  <!-- Appointments Grid -->
+  <div class="appt-grid" id="apptGrid">
+
+    {% if appointments %}
+    {% for appointment in appointments %}
+    <div class="appt-card" data-status="{{ appointment.appointment_status }}"
+      data-search="{{ appointment.customer_name | lower }} {{ appointment.service_name | lower }}">
+
+      <!-- Card Top Strip (status color accent) -->
+      <div class="appt-card__strip appt-card__strip--{{ appointment.appointment_status | lower }}"></div>
+
+      <!-- Card Header -->
+      <div class="appt-card__header">
+        <div class="appt-card__avatar">
+          {{ appointment.customer_name[0] | upper }}
+        </div>
+        <div class="appt-card__header-info">
+          <h3 class="appt-card__customer-name">{{ appointment.customer_name }}</h3>
+          <span class="appt-card__phone">
+            <svg viewBox="0 0 16 16" fill="none" class="appt-icon-sm">
+              <path d="M3 2h3l1 3-1.5 1.5a9 9 0 004 4L11 9l3 1v3a1 1 0 01-1 1A13 13 0 012 3a1 1 0 011-1z"
+                stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+            </svg>
+            {{ appointment.phone_number }}
+          </span>
+        </div>
+        <div class="appt-card__badges">
+          <span class="appt-badge appt-badge--status appt-badge--{{ appointment.status | lower }}">
+            {{ appointment.status }}
+          </span>
+          <span class="appt-badge appt-badge--payment appt-badge--pay-{{ appointment.payment_status | lower }}">
+            {{ appointment.payment_status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Card Divider -->
+      <div class="appt-card__divider"></div>
+
+      <!-- Card Body -->
+      <div class="appt-card__body">
+
+        <div class="appt-card__meta-row">
+          <div class="appt-card__meta-item">
+            <span class="appt-card__meta-icon">
+              <svg viewBox="0 0 16 16" fill="none">
+                <rect x="2" y="3" width="12" height="11" rx="2" stroke="currentColor" stroke-width="1.4" />
+                <path d="M5 1v2M11 1v2M2 7h12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+              </svg>
+            </span>
+            <div>
+              <span class="appt-card__meta-label">Date</span>
+              <span class="appt-card__meta-value">{{ appointment.appointment_date }}</span>
+            </div>
+          </div>
+
+          <div class="appt-card__meta-item">
+            <span class="appt-card__meta-icon">
+              <svg viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4" />
+                <path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </span>
+            <div>
+              <span class="appt-card__meta-label">Time</span>
+              <span class="appt-card__meta-value">{{ appointment.appointment_time }}</span>
+            </div>
+          </div>
+
+          {% if appointment.duration %}
+          <div class="appt-card__meta-item">
+            <span class="appt-card__meta-icon">
+              <svg viewBox="0 0 16 16" fill="none">
+                <path d="M8 2v4l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4" />
+              </svg>
+            </span>
+            <div>
+              <span class="appt-card__meta-label">Duration</span>
+              <span class="appt-card__meta-value">{{ appointment.duration }}</span>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="appt-card__service">
+          <span class="appt-card__service-label">Service</span>
+          <span class="appt-card__service-value">{{ appointment.service_name }}</span>
+        </div>
+
+      </div>
+
+      <!-- Card Footer / Actions -->
+      <div class="appt-card__footer">
+        <a href="#" class="appt-btn appt-btn--ghost view-details-btn" data-id="{{ appointment['appointment_id'] }}">
+          <svg viewBox="0 0 16 16" fill="none" class="appt-icon-sm">
+            <path d="M8 3C4.5 3 2 8 2 8s2.5 5 6 5 6-5 6-5-2.5-5-6-5z" stroke="currentColor" stroke-width="1.4" />
+            <circle cx="8" cy="8" r="1.8" stroke="currentColor" stroke-width="1.4" />
+          </svg>
+          View Details
+        </a>
+
+        {% if appointment.appointment_status != 'Completed' and appointment.appointment_status != 'Cancelled' %}
+        <button class="appt-btn appt-btn--primary" data-url="{{ url_for('staff.complete_appointment',
+appointment_id=appointment['appointment_id']) }}" onclick="markComplete(this)">
+
+          <svg viewBox="0 0 16 16" fill="none" class="appt-icon-sm">
+            <path d="M3 8l3.5 3.5L13 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          Mark Complete
+        </button>
+        {% else %}
+        <span class="appt-btn appt-btn--done">
+          <svg viewBox="0 0 16 16" fill="none" class="appt-icon-sm">
+            <path d="M3 8l3.5 3.5L13 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          {{ appointment.status }}
+        </span>
+        {% endif %}
+      </div>
+
+    </div>
+    {% endfor %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="appt-empty-state" id="apptEmptyState">
+      <div class="appt-empty-state__icon">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="8" y="12" width="48" height="44" rx="6" stroke="currentColor" stroke-width="2" />
+          <path d="M8 26h48" stroke="currentColor" stroke-width="2" />
+          <path d="M22 6v8M42 6v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          <path d="M22 38h8M22 46h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </div>
+      <h3 class="appt-empty-state__title">No appointments scheduled</h3>
+      <p class="appt-empty-state__subtitle">You currently have no assigned appointments.</p>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- No Results State (shown by JS when filter yields nothing) -->
+  <div class="appt-no-results" id="apptNoResults" style="display:none;">
+    <div class="appt-empty-state__icon">
+      <svg viewBox="0 0 64 64" fill="none">
+        <circle cx="28" cy="28" r="18" stroke="currentColor" stroke-width="2" />
+        <path d="M42 42l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <path d="M22 28h12M28 22v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    </div>
+    <h3 class="appt-empty-state__title">No matching appointments</h3>
+    <p class="appt-empty-state__subtitle">Try adjusting your filter or search term.</p>
+  </div>
+
+</div>
+
+
+
+<!-- Appointment Details Modal -->
+<div class="appt-modal-overlay" id="appointmentModal">
+
+  <div class="appt-modal">
+
+    <div class="appt-modal-header">
+      <h2>Appointment Details</h2>
+
+      <button class="appt-modal-close" id="closeAppointmentModal">
+        ✕
+      </button>
+    </div>
+
+    <div class="appt-modal-body">
+
+      <div class="appt-detail-card">
+        <h4>Customer</h4>
+        <p id="detailCustomer"></p>
+        <p id="detailPhone"></p>
+      </div>
+
+      <div class="appt-detail-card">
+        <h4>Appointment Info</h4>
+
+        <p>
+          <strong>Date:</strong>
+          <span id="detailDate"></span>
+        </p>
+
+        <p>
+          <strong>Start Time:</strong>
+          <span id="detailStartTime"></span>
+        </p>
+
+        <p>
+          <strong>End Time:</strong>
+          <span id="detailEndTime"></span>
+        </p>
+
+        <p>
+          <strong>Status:</strong>
+          <span id="detailStatus"></span>
+        </p>
+
+        <p>
+          <strong>Payment:</strong>
+          <span id="detailPayment"></span>
+        </p>
+      </div>
+
+      <div class="appt-detail-card">
+        <h4>Service</h4>
+        <p id="detailService"></p>
+      </div>
+
+      <div class="appt-detail-card">
+        <h4>Staff Assigned</h4>
+        <p id="detailStaff"></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/staff_appointment.js') }}"></script>
+{% endblock %}

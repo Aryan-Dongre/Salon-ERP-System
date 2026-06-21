@@ -1,0 +1,497 @@
+
+:root {
+  --mgr-radius-card: 1.125rem;   /* matches admin rounded-5 feel   */
+  --mgr-radius-btn:  0.75rem;    /* rounded-4 equivalent            */
+  --mgr-shadow-sm:   0 2px 12px rgba(0,0,0,.07);
+  --mgr-shadow-md:   0 4px 24px rgba(0,0,0,.10);
+  --mgr-shadow-hover:0 8px 32px rgba(0,0,0,.14);
+  --mgr-transition:  0.22s ease;
+
+  /* Gradient palette */
+  --grad-blue:    linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+  --grad-orange:  linear-gradient(135deg, #f97316 0%, #eab308 100%);
+  --grad-purple:  linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  --grad-green:   linear-gradient(135deg, #16a34a 0%, #10b981 100%);
+  --grad-rose:    linear-gradient(135deg, #e11d48 0%, #7c3aed 100%);
+  --grad-indigo:  linear-gradient(135deg, #4338ca 0%, #1e1b4b 100%);
+
+  /* Status colours */
+  --status-confirmed-bg: #dbeafe;
+  --status-confirmed-tx: #1d4ed8;
+  --status-pending-bg:   #fef9c3;
+  --status-pending-tx:   #a16207;
+  --status-completed-bg: #dcfce7;
+  --status-completed-tx: #15803d;
+  --status-cancelled-bg: #fee2e2;
+  --status-cancelled-tx: #b91c1c;
+}
+
+/* 1. PAGE HE */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.page-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -.01em;
+}
+
+.page-subtitle {
+  font-size: .82rem;
+  color: #64748b;
+}
+
+.salon-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: .78rem;
+  font-weight: 600;
+  padding: .35rem .85rem;
+  border-radius: 999px;
+  letter-spacing: .01em;
+}
+
+/* ─────────────────────────────────────────────────────
+   2. STAT CARDS
+───────────────────────────────────────────────────── */
+.stat-card {
+  border-radius: var(--mgr-radius-card);
+  padding: 1.1rem 1rem 1rem;
+  color: #fff;
+  box-shadow: var(--mgr-shadow-sm);
+  transition:
+    transform var(--mgr-transition),
+    box-shadow var(--mgr-transition);
+  cursor: default;
+  overflow: hidden;
+  position: relative;
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Subtle decorative circle */
+.stat-card::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.10);
+  bottom: -28px;
+  right: -20px;
+  pointer-events: none;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--mgr-shadow-hover);
+}
+
+/* Gradient variants */
+.stat-card--blue   { background: var(--grad-blue);   }
+.stat-card--orange { background: var(--grad-orange);  }
+.stat-card--purple { background: var(--grad-purple);  }
+.stat-card--green  { background: var(--grad-green);   }
+.stat-card--rose   { background: var(--grad-rose);    }
+.stat-card--indigo { background: var(--grad-indigo);  }
+
+/* Icon wrap */
+.stat-card__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: .75rem;
+  background: rgba(255,255,255,.18);
+  font-size: 1.35rem;
+  margin-bottom: .6rem;
+  flex-shrink: 0;
+}
+
+.stat-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+
+.stat-card__label {
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 0;
+  opacity: .88;
+  line-height: 1.3;
+}
+
+.stat-card__value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-bottom: 0;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+
+.stat-card__sub {
+  font-size: .72rem;
+  opacity: .80;
+  display: flex;
+  align-items: center;
+  gap: .1rem;
+  margin-top: .1rem;
+}
+
+/* ─────────────────────────────────────────────────────
+   3. ERP CARD  (white container — same as Admin)
+───────────────────────────────────────────────────── */
+.erp-card {
+  background: #fff;
+  border-radius: var(--mgr-radius-card);
+  box-shadow: var(--mgr-shadow-sm);
+  border: 1px solid #f1f5f9;
+  padding: 1.4rem 1.4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.erp-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.erp-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: .1rem;
+  letter-spacing: -.01em;
+}
+
+.erp-card__subtitle {
+  font-size: .78rem;
+  color: #94a3b8;
+  margin-bottom: 0;
+}
+
+/* ─────────────────────────────────────────────────────
+   4. SCHEDULE TABLE
+───────────────────────────────────────────────────── */
+.erp-table thead th {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+  color: #94a3b8;
+  border-bottom: 1px solid #f1f5f9;
+  padding: .6rem .75rem;
+  background: transparent;
+  white-space: nowrap;
+}
+
+.erp-table tbody tr {
+  transition: background var(--mgr-transition);
+  border-bottom: 1px solid #f8fafc;
+}
+
+.erp-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.erp-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.erp-table td {
+  font-size: .84rem;
+  color: #334155;
+  padding: .65rem .75rem;
+  vertical-align: middle;
+}
+
+/* Customer avatar + name */
+.customer-cell {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  white-space: nowrap;
+}
+
+.customer-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: .75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.staff-cell {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: .83rem;
+}
+
+/* Time badge */
+.time-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: .76rem;
+  font-weight: 600;
+  padding: .2rem .55rem;
+  border-radius: .45rem;
+  white-space: nowrap;
+}
+
+/* Status badges */
+.status-badge {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .3rem .65rem;
+  border-radius: .45rem;
+  letter-spacing: .01em;
+}
+
+.status-confirmed {
+  background: var(--status-confirmed-bg);
+  color: var(--status-confirmed-tx);
+}
+
+.status-pending {
+  background: var(--status-pending-bg);
+  color: var(--status-pending-tx);
+}
+
+.status-completed {
+  background: var(--status-completed-bg);
+  color: var(--status-completed-tx);
+}
+
+.status-cancelled {
+  background: var(--status-cancelled-bg);
+  color: var(--status-cancelled-tx);
+}
+
+/* ─────────────────────────────────────────────────────
+   5. QUICK ACTION BUTTONS
+───────────────────────────────────────────────────── */
+.quick-actions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  flex: 1;
+}
+
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  padding: .8rem 1rem;
+  border-radius: var(--mgr-radius-btn);
+  text-decoration: none;
+  transition:
+    background var(--mgr-transition),
+    transform var(--mgr-transition),
+    box-shadow var(--mgr-transition);
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.quick-action-btn:hover {
+  transform: translateX(3px);
+  box-shadow: var(--mgr-shadow-sm);
+  text-decoration: none;
+}
+
+/* Variants */
+.quick-action-btn--primary {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+.quick-action-btn--primary:hover {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.quick-action-btn--secondary {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+  color: #5b21b6;
+}
+.quick-action-btn--secondary:hover {
+  background: #ede9fe;
+  color: #4c1d95;
+}
+
+.quick-action-btn--accent {
+  background: #fdf2f8;
+  border-color: #fbcfe8;
+  color: #be185d;
+}
+.quick-action-btn--accent:hover {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+.quick-action-btn--success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+.quick-action-btn--success:hover {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Icon wrap inside button */
+.quick-action-btn__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: .6rem;
+  background: rgba(255,255,255,.75);
+  font-size: 1rem;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+.quick-action-btn__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  flex: 1;
+}
+
+.quick-action-btn__text strong {
+  font-size: .84rem;
+  font-weight: 700;
+}
+
+.quick-action-btn__text small {
+  font-size: .72rem;
+  opacity: .70;
+  font-weight: 400;
+}
+
+.quick-action-btn__arrow {
+  font-size: .8rem;
+  opacity: .45;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform var(--mgr-transition);
+}
+
+.quick-action-btn:hover .quick-action-btn__arrow {
+  transform: translateX(3px);
+  opacity: .75;
+}
+
+/* Footer strip */
+.quick-actions-footer {
+  display: flex;
+  align-items: center;
+  padding-top: .6rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* ─────────────────────────────────────────────────────
+   6. CARD ENTRANCE ANIMATION
+───────────────────────────────────────────────────── */
+@keyframes mgr-fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#statCards .col-6,
+#statCards .col-md-4,
+#statCards .col-xl-2 {
+  animation: mgr-fadeUp .35s ease both;
+}
+
+#statCards > *:nth-child(1) { animation-delay: .05s; }
+#statCards > *:nth-child(2) { animation-delay: .10s; }
+#statCards > *:nth-child(3) { animation-delay: .15s; }
+#statCards > *:nth-child(4) { animation-delay: .20s; }
+#statCards > *:nth-child(5) { animation-delay: .25s; }
+#statCards > *:nth-child(6) { animation-delay: .30s; }
+
+/* ─────────────────────────────────────────────────────
+   7. RESPONSIVE OVERRIDES
+───────────────────────────────────────────────────── */
+
+/* Tablet — tighten card values */
+@media (max-width: 991.98px) {
+  .stat-card__value {
+    font-size: 1.45rem;
+  }
+  .erp-card {
+    padding: 1.1rem 1rem .9rem;
+  }
+}
+
+/* Mobile — small card adjustments */
+@media (max-width: 575.98px) {
+  .stat-card {
+    min-height: 130px;
+    padding: .9rem .85rem .85rem;
+  }
+  .stat-card__icon-wrap {
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+  }
+  .stat-card__value {
+    font-size: 1.3rem;
+  }
+  .stat-card__label {
+    font-size: .68rem;
+  }
+  .stat-card__sub {
+    font-size: .68rem;
+  }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .erp-card__header {
+    flex-direction: column;
+  }
+  .quick-action-btn {
+    padding: .7rem .85rem;
+  }
+}

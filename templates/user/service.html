@@ -1,0 +1,165 @@
+{% extends "user/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user/services.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<!-- ========== HERO SECTION ========== -->
+<section class="svc-hero">
+    <div class="svc-hero__glow svc-hero__glow--left"></div>
+    <div class="svc-hero__glow svc-hero__glow--right"></div>
+
+    <div class="container position-relative">
+        <div class="svc-hero__inner text-center">
+            <span class="svc-eyebrow">Premium Salon Treatments</span>
+
+            <h1 class="svc-hero__heading">
+                Curated Luxury<br>
+                <span class="svc-hero__heading--gold">Beauty Services</span>
+            </h1>
+
+            <p class="svc-hero__subtext">
+                Designed for confidence, crafted by experts,<br class="d-none d-md-inline">
+                and tailored to your unique beauty journey.
+            </p>
+
+            <div class="svc-hero__divider">
+                <span class="svc-hero__divider-line"></span>
+                <i class="fas fa-gem svc-hero__divider-icon"></i>
+                <span class="svc-hero__divider-line"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CATEGORY NAV ========== -->
+<section class="svc-cat-nav">
+    <div class="container">
+        <div class="svc-cat-nav__track">
+            <button class="svc-cat-pill svc-cat-pill--active">All</button>
+            <button class="svc-cat-pill">
+                <i class="fas fa-scissors me-2"></i>Hair
+            </button>
+            <button class="svc-cat-pill">
+                <i class="fas fa-spa me-2"></i>Skin
+            </button>
+            <button class="svc-cat-pill">
+                <i class="fas fa-gem me-2"></i>Bridal
+            </button>
+            <button class="svc-cat-pill">
+                <i class="fas fa-user-tie me-2"></i>Groom
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SERVICES GRID ========== -->
+<section class="svc-grid-section">
+    <div class="svc-grid-section__glow"></div>
+    <div class="container position-relative">
+
+        {% if services %}
+        <div class="svc-grid">
+            {% for service in services %}
+            <article class="svc-card">
+                <!-- Card top bar -->
+                <div class="svc-card__top">
+                    <div class="svc-card__icon-wrap">
+                        {% set cat = service.category_name | lower %}
+                        {% if 'hair' in cat %}
+                        <i class="fas fa-scissors"></i>
+                        {% elif 'skin' in cat %}
+                        <i class="fas fa-spa"></i>
+                        {% elif 'bridal' in cat %}
+                        <i class="fas fa-gem"></i>
+                        {% elif 'groom' in cat %}
+                        <i class="fas fa-user-tie"></i>
+                        {% else %}
+                        <i class="fas fa-star"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="svc-card__meta">
+                        <span class="svc-badge">{{ service.category_name }}</span>
+                        <span class="svc-chip">
+                            <i class="fas fa-clock me-1"></i>{{ service.duration_minutes }} mins
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card body -->
+                <div class="svc-card__body">
+                    <h3 class="svc-card__name">{{ service.service_name }}</h3>
+                    <p class="svc-card__desc">
+                        {{ service.description if service.description else 'Premium salon service tailored to your
+                        unique needs.' }}
+                    </p>
+                </div>
+
+                <!-- Card footer -->
+                <div class="svc-card__footer">
+                    <div class="svc-card__price">
+                        <span class="svc-card__price-currency">₹</span>
+                        <span class="svc-card__price-value">{{ service.price }}</span>
+                    </div>
+                    <a href="{{ url_for('user.appointment', service_id=service.service_id) }}" class="svc-btn-book">
+                        Book Now
+                        <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+
+                <!-- Hover glow -->
+                <div class="svc-card__hover-glow"></div>
+            </article>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- Empty state -->
+        <div class="svc-empty">
+            <div class="svc-empty__glass">
+                <div class="svc-empty__icon">
+                    <i class="fas fa-spa"></i>
+                </div>
+                <h3 class="svc-empty__heading">Coming Soon</h3>
+                <p class="svc-empty__text">
+                    Luxury services will be available soon.<br>
+                    We are curating an exceptional experience for you.
+                </p>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- ========== CTA SECTION ========== -->
+<section class="svc-cta">
+    <div class="svc-cta__glow svc-cta__glow--left"></div>
+    <div class="svc-cta__glow svc-cta__glow--right"></div>
+
+    <div class="container position-relative">
+        <div class="svc-cta__glass">
+            <span class="svc-eyebrow">Your Journey Awaits</span>
+
+            <h2 class="svc-cta__heading">
+                Ready For Your<br>
+                <span class="svc-cta__heading--gold">Transformation?</span>
+            </h2>
+
+            <p class="svc-cta__subtext">
+                Step into a world where every detail is designed around you.<br class="d-none d-md-inline">
+                Our specialists are ready to craft your perfect experience.
+            </p>
+
+            <a href="{{ url_for('user.appointment') }}" class="svc-btn-primary">
+                <span>Book Appointment</span>
+                <i class="fas fa-calendar-check ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

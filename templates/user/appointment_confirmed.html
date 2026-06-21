@@ -1,0 +1,200 @@
+{% extends "user/base.html" %}
+
+{% block title %}
+Appointment Confirmed
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static',
+      filename='css/user/appointment_confirmed.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="confirmation-page">
+
+    <div class="container">
+
+        <!-- Success Header -->
+
+        <div class="success-card">
+
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <span class="confirmation-badge">
+                Booking Confirmed
+            </span>
+
+            <h1>
+                Appointment Confirmed
+            </h1>
+
+            <p>
+                Thank you for booking with us.
+                Your appointment request has been successfully received.
+            </p>
+
+        </div>
+
+        <!-- Booking Details -->
+
+        <div class="detail-card">
+
+            <div class="card-header">
+                <h3>
+                    Booking Details
+                </h3>
+            </div>
+
+            <div class="detail-grid">
+
+                <div class="detail-item">
+                    <label>Booking ID</label>
+                    <span>#{{ payment.booking_id }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <label>Customer</label>
+                    <span>{{ payment.full_name }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <label>Appointment Date</label>
+                    <span>{{ payment.appointment_date }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <label>Appointment Time</label>
+                    <span>{{ payment.start_time }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <label>Payment Method</label>
+                    <span>Pay At Salon</span>
+                </div>
+
+                <div class="detail-item">
+                    <label>Payment Status</label>
+
+                    <span class="pending-badge">
+                        Pending At Salon
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Services -->
+
+        <div class="detail-card">
+
+            <div class="card-header">
+                <h3>
+                    Selected Services
+                </h3>
+            </div>
+
+            <div class="services-list">
+
+                {% for service in payment.services %}
+
+                <div class="service-chip">
+                    {{ service.service_name }}
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- Payment Summary -->
+
+        <div class="detail-card">
+
+            <div class="card-header">
+                <h3>
+                    Payment Summary
+                </h3>
+            </div>
+
+            <div class="amount-section">
+
+                <h2>
+                    ₹{{ payment.amount }}
+                </h2>
+
+                <span class="payment-pill">
+                    Pay At Salon
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- Instructions -->
+
+        <div class="detail-card">
+
+            <div class="card-header">
+                <h3>
+                    Appointment Instructions
+                </h3>
+            </div>
+
+            <ul class="info-list">
+                <li>Arrive 10 minutes before your appointment.</li>
+                <li>Carry any booking reference if required.</li>
+                <li>Inform reception about special requests.</li>
+                <li>Payment can be completed at the salon counter.</li>
+            </ul>
+
+        </div>
+
+        <!-- Policy -->
+
+        <div class="detail-card">
+
+            <div class="card-header">
+                <h3>
+                    Cancellation Policy
+                </h3>
+            </div>
+
+            <p class="policy-text">
+                Appointments may be cancelled or rescheduled
+                up to 24 hours before the appointment time.
+                Late cancellations may be subject to salon policy.
+            </p>
+
+        </div>
+
+        <!-- Actions -->
+
+        <div class="action-buttons">
+
+            <a href="{{ url_for('user.home') }}"
+               class="btn-home">
+
+                Back To Home
+
+            </a>
+
+            <a href="{{ url_for('user.services') }}"
+               class="btn-services">
+
+                View Services
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

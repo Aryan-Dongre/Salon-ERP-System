@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+<div style="padding: 30px;">
+
+    <h1>Appointment Details</h1>
+
+    <hr>
+
+    <p><strong>ID:</strong> {{ appointment.appointment_id }}</p>
+
+    <p><strong>Customer:</strong>
+        {{ appointment.customer_name }}
+    </p>
+
+    <p><strong>Phone:</strong>
+        {{ appointment.phone_number }}
+    </p>
+
+    <p><strong>Service:</strong>
+        {{ appointment.service_name }}
+    </p>
+
+    <p><strong>Staff:</strong>
+        {{ appointment.staff_name }}
+    </p>
+
+    <p><strong>Date:</strong>
+        {{ appointment.appointment_date }}
+    </p>
+
+    <p><strong>Start Time:</strong>
+        {{ appointment.start_time }}
+    </p>
+
+    <p><strong>End Time:</strong>
+        {{ appointment.end_time }}
+    </p>
+
+    <p><strong>Status:</strong>
+        {{ appointment.appointment_status }}
+    </p>
+
+    <p><strong>Payment:</strong>
+        {{ appointment.payment_status }}
+    </p>
+
+</div>
+
+{% endblock %}

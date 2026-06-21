@@ -1,0 +1,250 @@
+{% extends "dashboard/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/staff/receptionist_staff.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="sm-wrapper">
+
+  <!-- ── SECTION 1 · PAGE HEADER ── -->
+  <div class="sm-page-header">
+    <div class="sm-page-header__text">
+      <h1 class="sm-page-header__title">Staff Management</h1>
+      <p class="sm-page-header__subtitle">Manage and monitor salon staff members</p>
+    </div>
+  </div>
+
+  <!-- ── SECTION 2 · STATS CARDS ── -->
+  <div class="sm-stats-grid">
+
+    <div class="sm-stat-card sm-stat-card--total">
+      <div class="sm-stat-card__icon-wrap">
+        <svg class="sm-stat-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="sm-stat-card__body">
+        <span class="sm-stat-card__label">Total Staff</span>
+        <span class="sm-stat-card__value">{{ stats.total_staff }}</span>
+      </div>
+      <div class="sm-stat-card__accent"></div>
+    </div>
+
+    <div class="sm-stat-card sm-stat-card--present">
+      <div class="sm-stat-card__icon-wrap">
+        <svg class="sm-stat-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="sm-stat-card__body">
+        <span class="sm-stat-card__label">Present Today</span>
+        <span class="sm-stat-card__value">{{ stats.present_staff }}</span>
+      </div>
+      <div class="sm-stat-card__accent"></div>
+    </div>
+
+    <div class="sm-stat-card sm-stat-card--absent">
+      <div class="sm-stat-card__icon-wrap">
+        <svg class="sm-stat-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="sm-stat-card__body">
+        <span class="sm-stat-card__label">Absent Today</span>
+        <span class="sm-stat-card__value">{{ stats.absent_staff }}</span>
+      </div>
+      <div class="sm-stat-card__accent"></div>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 3 · SEARCH PANEL ── -->
+  <div class="sm-search-panel">
+    <form class="sm-search-form" method="GET" action="{{ url_for('receptionist.receptionist_staff') }}">
+      <div class="sm-search-form__fields">
+
+        <div class="sm-field-group">
+          <label class="sm-field-group__label" for="search_name">Staff Name</label>
+          <div class="sm-field-group__input-wrap">
+            <svg class="sm-field-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input
+              id="search_name"
+              class="sm-field-group__input"
+              type="text"
+              name="search_name"
+              value="{{ search_name }}"
+              placeholder="Search by name…"
+              autocomplete="off"
+            >
+          </div>
+        </div>
+
+        <div class="sm-field-group">
+          <label class="sm-field-group__label" for="search_staff_id">Staff ID</label>
+          <div class="sm-field-group__input-wrap">
+            <svg class="sm-field-group__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+              <path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z"/>
+              <line x1="8" y1="13" x2="16" y2="13"/>
+            </svg>
+            <input
+              id="search_staff_id"
+              class="sm-field-group__input"
+              type="text"
+              name="search_staff_id"
+              value="{{ search_staff_id }}"
+              placeholder="Search by ID…"
+              autocomplete="off"
+            >
+          </div>
+        </div>
+
+      </div>
+
+      <div class="sm-search-form__actions">
+        <button type="submit" class="sm-btn sm-btn--primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          Search
+        </button>
+        <a href="{{ url_for('receptionist.receptionist_staff') }}" class="sm-btn sm-btn--ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-4.36"/>
+          </svg>
+          Reset
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── SECTION 4 · STAFF LIST ── -->
+  <div class="sm-table-panel">
+    <div class="sm-table-panel__header">
+      <h2 class="sm-table-panel__title">Staff Directory</h2>
+      <span class="sm-table-panel__count">
+        {{ staff_list | length }} member{% if staff_list | length != 1 %}s{% endif %} shown
+      </span>
+    </div>
+
+    <div class="sm-table-scroll">
+      <table class="sm-table">
+        <thead class="sm-table__head">
+          <tr>
+            <th class="sm-table__th">Staff ID</th>
+            <th class="sm-table__th">Name</th>
+            <th class="sm-table__th">Phone</th>
+            <th class="sm-table__th">Gender</th>
+            <th class="sm-table__th">Role</th>
+            <th class="sm-table__th">Specialization</th>
+            <th class="sm-table__th">Status</th>
+          </tr>
+        </thead>
+        <tbody class="sm-table__body">
+          {% for staff in staff_list %}
+          <tr class="sm-table__row">
+            <td class="sm-table__td sm-table__td--id">#STF-{{ staff.staff_id }}</td>
+            <td class="sm-table__td sm-table__td--name">
+              <span class="sm-staff-avatar">{{ staff.full_name[0] | upper }}</span>
+              {{ staff.full_name }}
+            </td>
+            <td class="sm-table__td">{{ staff.phone }}</td>
+            <td class="sm-table__td">{{ staff.gender  or 'N/A'}}</td>
+            <td class="sm-table__td">{{ staff.role_name }}</td>
+            <td class="sm-table__td sm-table__td--spec">{{ staff.specialization or 'NOT Assigned' }}</td>
+            <td class="sm-table__td">
+              <span class="sm-badge sm-badge--{{ staff.employment_status | lower }}">
+                {{ staff.employment_status | replace('_', ' ') | title }}
+              </span>
+            </td>
+          </tr>
+          {% else %}
+          <tr class="sm-table__row sm-table__row--empty">
+            <td colspan="7" class="sm-table__td sm-table__td--empty">
+              <div class="sm-empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <p>No staff members found. Try adjusting your search.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECTION 5 · PAGINATION ── -->
+  {% if total_pages > 1 %}
+  <div class="sm-pagination">
+    <span class="sm-pagination__info">Page {{ current_page }} of {{ total_pages }}</span>
+    <div class="sm-pagination__controls">
+
+      {% if current_page > 1 %}
+      <a href="?page={{ current_page - 1 }}&search_name={{ search_name or '' }}&search_staff_id={{ search_staff_id or '' }}"
+         class="sm-pagination__btn sm-pagination__btn--prev">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Previous
+      </a>
+      {% else %}
+      <span class="sm-pagination__btn sm-pagination__btn--prev sm-pagination__btn--disabled">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Previous
+      </span>
+      {% endif %}
+
+      <div class="sm-pagination__pages">
+        {% for p in range(1, total_pages + 1) %}
+          {% if p == current_page %}
+          <span class="sm-pagination__page sm-pagination__page--active">{{ p }}</span>
+          {% elif p == 1 or p == total_pages or (p >= current_page - 1 and p <= current_page + 1) %}
+          <a href="?page={{ p }}&search_name={{ search_name }}&search_staff_id={{ search_staff_id }}"
+             class="sm-pagination__page">{{ p }}</a>
+          {% elif p == current_page - 2 or p == current_page + 2 %}
+          <span class="sm-pagination__ellipsis">…</span>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if current_page < total_pages %}
+      <a href="?page={{ current_page + 1 }}&search_name={{ search_name }}&search_staff_id={{ search_staff_id }}"
+         class="sm-pagination__btn sm-pagination__btn--next">
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </a>
+      {% else %}
+      <span class="sm-pagination__btn sm-pagination__btn--next sm-pagination__btn--disabled">
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </span>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/staff/receptionist_staff.js') }}"></script>
+{% endblock %}

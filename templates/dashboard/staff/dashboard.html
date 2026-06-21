@@ -1,0 +1,239 @@
+{% extends "dashboard/base.html" %}
+
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/staff_dashboard.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="staff-dashboard">
+
+  <!-- ═══════════════════════════════════════════════════════
+       WELCOME HEADER
+  ═══════════════════════════════════════════════════════ -->
+  <div class="welcome-section">
+    <div class="welcome-left">
+      <p class="welcome-label">Good Morning</p>
+      <h1 class="welcome-name">Welcome Back, {{staff_name }} <span class="wave">👋</span></h1>
+      <p class="welcome-subtitle">Here's your work summary for today.</p>
+    </div>
+    <div class="welcome-right">
+      <div class="date-card">
+        <div class="date-icon"><i class="fa-regular fa-calendar-days"></i></div>
+        <div class="date-info">
+          <span class="date-day">{{ now.strftime('%A') }}</span>
+          <span class="date-full">{{ now.strftime('%B %d, %Y')}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       STATISTICS CARDS
+  ═══════════════════════════════════════════════════════ -->
+  <div class="stats-grid">
+
+    <div class="stat-card stat-card--1">
+      <div class="stat-card__icon-wrap">
+        <i class="fa-regular fa-calendar-check"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Today's Appointments</span>
+        <span class="stat-card__value"  data-count="{{ todays_appointments }}">
+          {{ todays_appointments}}
+        </span>
+      </div>
+
+      <div class="stat-card__deco"></div>
+    </div>
+
+    <div class="stat-card stat-card--2">
+      <div class="stat-card__icon-wrap">
+        <i class="fa-solid fa-scissors"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Completed Services</span>
+        <span class="stat-card__value" data-count="{{ completed_services }}">
+          {{ completed_services }}
+        </span>
+      </div>
+
+      <div class="stat-card__deco"></div>
+    </div>
+    <div class="stat-card stat-card--3">
+      <div class="stat-card__icon-wrap">
+        <i class="fa-regular fa-clock"></i>
+      </div>
+
+      <div class="stat-card__body">
+        <span class="stat-card__label">Pending Appointments</span>
+        <span class="stat-card__value" data-count="{{ pending_appointments }}">
+          {{ pending_appointments }}
+        </span>
+      </div>
+      <div class="stat-card__deco"></div>
+    </div>
+
+    <div class="stat-card stat-card--4">
+      <div class="stat-card__icon-wrap">
+        <i class="fa-solid fa-indian-rupee-sign"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Today's Revenue</span>
+        <span class="stat-card__value" data-count="{{ todays_revenue }}">
+          ₹{{ "%0.2f"|format(todays_revenue) }}
+        </span>
+      </div>
+      <div class="stat-card__deco"></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       TODAY'S SCHEDULE
+  ═══════════════════════════════════════════════════════ -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title-group">
+        <i class="fa-regular fa-calendar-days section-icon"></i>
+        <h2 class="section-title">Today's Schedule</h2>
+      </div>
+      <span class="section-badge">{{ todays_appointments }} Appointments</span>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="schedule-table">
+        <thead>
+          <tr>
+            <th><i class="fa-regular fa-clock"></i> Time</th>
+            <th><i class="fa-regular fa-user"></i> Client Name</th>
+            <th><i class="fa-solid fa-spa"></i> Service</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+  {% for appointment in todays_schedule %}
+  <tr class="table-row">
+
+    <td class="time-col">
+      <span class="time-pill">
+        {{ appointment[2].strftime('%I:%M %p') }}
+      </span>
+    </td>
+
+    <td class="client-col">
+      <div class="client-info">
+
+        <div class="client-avatar">
+          {{ appointment[0][0] }}
+        </div>
+
+        <span>
+          {{ appointment[0] }}
+        </span>
+
+      </div>
+    </td>
+
+    <td>
+      {{ appointment[1] }}
+    </td>
+
+    <td>
+      <span class="status-badge
+      {% if appointment[3] == 'completed' %}
+          status--completed
+      {% elif appointment[3] == 'scheduled' %}
+          status--pending
+      {% elif appointment[3] == 'in_progress' %}
+          status--ongoing
+      {% endif %}">
+
+        {{ appointment[3].replace('_', ' ').title() }}
+
+      </span>
+    </td>
+
+  </tr>
+  {% endfor %}
+</tbody>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BOTTOM ROW: Performance + Quick Actions
+  ═══════════════════════════════════════════════════════ -->
+  <div class="bottom-row">
+
+    <!-- Performance Overview -->
+    <div class="section-card perf-card">
+      <div class="section-header">
+        <div class="section-title-group">
+          <i class="fa-solid fa-chart-simple section-icon"></i>
+          <h2 class="section-title">Performance Overview</h2>
+        </div>
+      </div>
+      <div class="perf-grid">
+
+        <div class="perf-item">
+          <div class="perf-item__icon"><i class="fa-solid fa-star"></i></div>
+          <div class="perf-item__body">
+            <span class="perf-item__label">Most Performed Service</span>
+            <span class="perf-item__value">{{ most_performed_service  }}</span>
+          </div>
+        </div>
+
+        <div class="perf-item">
+          <div class="perf-item__icon"><i class="fa-solid fa-users"></i></div>
+          <div class="perf-item__body">
+            <span class="perf-item__label">Total Clients Served</span>
+            <span class="perf-item__value">{{ total_clients_served }}</span>
+          </div>
+        </div>
+
+        <div class="perf-item">
+          <div class="perf-item__icon"><i class="fa-solid fa-check-double"></i></div>
+          <div class="perf-item__body">
+            <span class="perf-item__label">Monthly Completed Services</span>
+            <span class="perf-item__value">{{ monthly_completed_services }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-card quick-actions-card">
+      <div class="section-header">
+        <div class="section-title-group">
+          <i class="fa-solid fa-bolt section-icon"></i>
+          <h2 class="section-title">Quick Actions</h2>
+        </div>
+      </div>
+      <div class="actions-list">
+        <button class="action-btn action-btn--primary">
+          <i class="fa-regular fa-calendar-days"></i>
+          <span>View Schedule</span>
+          <i class="fa-solid fa-arrow-right btn-arrow"></i>
+        </button>
+        <button class="action-btn action-btn--secondary">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <span>Update Status</span>
+          <i class="fa-solid fa-arrow-right btn-arrow"></i>
+        </button>
+        <button class="action-btn action-btn--tertiary">
+          <i class="fa-regular fa-address-book"></i>
+          <span>View Clients</span>
+          <i class="fa-solid fa-arrow-right btn-arrow"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}<script src="{{ url_for('static', filename='js/dashboard/staff_dashboard.js') }}"></script>
+{% endblock %}

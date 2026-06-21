@@ -1,0 +1,482 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Services — Salon ERP{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/service/admin_service.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="service-page">
+
+  <!-- ─── Page Header ─── -->
+  <div class="page-header">
+    <div class="page-header__left">
+      <h1 class="page-title">Service Management</h1>
+      <p class="page-subtitle">Manage all salon services, pricing, and availability</p>
+    </div>
+    <div class="page-header__right">
+      <div class="header-meta">
+        <span class="meta-badge">
+          <i class="fas fa-sync-alt"></i> Live Data
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Stats Cards ─── -->
+  <div class="stats-grid">
+
+    <div class="stat-card stat-card--total">
+      <div class="stat-card__icon">
+        <i class="fas fa-scissors"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Total Services</span>
+        <span class="stat-card__value">{{ cards.total_card }}</span>
+        <span class="stat-card__sub">Across all categories</span>
+      </div>
+      <div class="stat-card__glow"></div>
+    </div>
+
+    <div class="stat-card stat-card--active">
+      <div class="stat-card__icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Active Services</span>
+        <span class="stat-card__value">{{ cards.active_service}}</span>
+        <span class="stat-card__sub">Currently available</span>
+      </div>
+      <div class="stat-card__glow"></div>
+    </div>
+
+    <div class="stat-card stat-card--inactive">
+      <div class="stat-card__icon">
+        <i class="fas fa-ban"></i>
+      </div>
+      <div class="stat-card__body">
+        <span class="stat-card__label">Deactive Services</span>
+        <span class="stat-card__value">{{ cards.inactive_service }}</span>
+        <span class="stat-card__sub">Temporarily disabled</span>
+      </div>
+      <div class="stat-card__glow"></div>
+    </div>
+
+  </div>
+
+  <!-- ─── Service Table Section ─── -->
+  <div class="table-section">
+
+    <div class="table-section__header">
+      <div class="table-section__header-left">
+        <h2 class="section-title">All Services</h2>
+        <span class="record-count">Showing {{ service_details|length }}
+          of
+          {{ cards.total_service }} Services
+        </span>
+      </div>
+      <div class="table-section__header-right">
+        <div class="search-box">
+          <i class="fas fa-search search-box__icon"></i>
+          <input type="text" class="search-box__input" placeholder="Search services...">
+        </div>
+        <div class="filter-group">
+          <select class="filter-select">
+            <option value="">All Categories</option>
+            <option value="hair">Hair</option>
+            <option value="skin">Skin</option>
+            <option value="nail">Nail</option>
+            <option value="bridal">Bridal</option>
+            <option value="grooming">Grooming</option>
+          </select>
+          <select class="filter-select">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Wrapper (scrollable on mobile) -->
+    <div class="table-wrapper">
+      <table class="service-table">
+        <thead>
+          <tr>
+            <th class="th-name">Service Name</th>
+            <th class="th-category">Category</th>
+            <th class="th-duration">Duration</th>
+            <th class="th-price">Price</th>
+            <th class="th-desc">Description</th>
+            <th class="th-status">Status</th>
+            <th class="th-actions">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {% if service_details %}
+
+
+          {% for service in service_details %}
+
+          <tr class="service-row" data-service-id="{{ service.service_id }}"
+            data-service-name="{{ service.service_name }}" data-service-category="{{ service.category_name }}"
+            data-service-duration="{{ service.duration_minutes }}" data-service-price="{{ service.price }}"
+            data-service-description="{{ service.description or '' }}"
+            data-service-status="{{ 'true' if service.is_active else 'false' }}">
+
+            <td class="td-name">
+              <div class="service-name-cell">
+                <div class="service-avatar service-avatar--hair">
+                  <i class="fas fa-scissors"></i>
+                </div>
+
+                <span class="service-name-text">
+                  {{ service.service_name }}
+                </span>
+              </div>
+            </td>
+
+            <td>
+              <span class="category-badge category-badge--hair">
+                {{ service.category_name }}
+              </span>
+            </td>
+
+            <td>
+              <span class="duration-text">
+                <i class="far fa-clock"></i>
+                {{ service.duration_minutes }} min
+              </span>
+            </td>
+
+            <td>
+              <span class="price-text">
+                ₹{{ service.price }}
+              </span>
+            </td>
+
+            <td>
+              <span class="desc-text" title="{{ service.description or 'No description available' }}">
+                {{ service.description or 'No description available' }}
+              </span>
+            </td>
+
+            <td>
+              <label class="toggle-switch">
+
+                <input type="checkbox" data-service-id="{{ service.service_id }}" {% if service.is_active %} checked {%
+                  endif %}>
+
+                <span class="toggle-slider"></span>
+              </label>
+            </td>
+
+          <td>
+  <div class="action-btns">
+
+    <button
+      class="btn-view"
+      onclick="openViewModal('{{ service.service_id }}')"
+      title="View Details"
+      type="button"
+    >
+      <i class="fas fa-eye"></i>
+    </button>
+
+    <button
+      class="btn-edit"
+      onclick="openEditModal('{{ service.service_id }}')"
+      title="Edit Service"
+      type="button"
+    >
+      <i class="fas fa-pencil-alt"></i>
+    </button>
+
+  </div>
+</td>
+
+          </tr>
+
+          {% endfor %}
+
+
+          {% else %}
+
+          <tr>
+            <td colspan="7" class="text-center">
+              No services found
+            </td>
+          </tr>
+
+          {% endif %}
+
+
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="table-footer">
+      <span class="pagination-info">Showing 1–10 of 125 services</span>
+      <div class="pagination">
+        <button class="page-btn page-btn--disabled" disabled>
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="page-btn page-btn--active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <span class="page-ellipsis">…</span>
+        <button class="page-btn">13</button>
+        <button class="page-btn">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!---------------------------------------------------------------------->
+
+<!-- ════════════════════════════════════════════
+     VIEW SERVICE MODAL
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="viewModal">
+
+  <div class="modal modal--view">
+
+    <!-- Header -->
+    <div class="modal__header">
+
+      <div class="modal__header-left">
+        <div class="modal-icon modal-icon--view">
+          <i class="fas fa-eye"></i>
+        </div>
+
+        <div>
+          <h3 class="modal__title">
+            Service Details
+          </h3>
+
+          <p class="modal__subtitle">
+            Read-only information
+          </p>
+        </div>
+      </div>
+
+      <button class="modal__close" onclick="closeModal('viewModal')">
+        <i class="fas fa-times"></i>
+      </button>
+
+    </div>
+
+    <!-- Body -->
+    <div class="modal__body">
+
+      <!-- Hero -->
+      <div class="view-hero">
+
+        <div class="view-hero__avatar" id="viewAvatar">
+          <i class="fas fa-scissors"></i>
+        </div>
+
+        <div class="view-hero__info">
+
+          <h2 class="view-hero__name" id="viewName">
+            Service Name
+          </h2>
+
+          <div class="view-hero__tags">
+
+            <span class="category-badge" id="viewCategoryBadge">
+              Category
+            </span>
+
+            <span class="status-pill" id="viewStatusBadge">
+              Active
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Grid -->
+      <div class="view-grid">
+
+        <div class="view-field">
+          <span class="view-field__label">
+            <i class="far fa-clock"></i>
+            Duration
+          </span>
+
+          <span class="view-field__value" id="viewDuration">
+            30 minutes
+          </span>
+        </div>
+
+        <div class="view-field">
+          <span class="view-field__label">
+            <i class="fas fa-rupee-sign"></i>
+            Price
+          </span>
+
+          <span class="view-field__value view-field__value--price" id="viewPrice">
+            ₹350
+          </span>
+        </div>
+
+        <div class="view-field">
+          <span class="view-field__label">
+            <i class="fas fa-tag"></i>
+            Category
+          </span>
+
+          <span class="view-field__value" id="viewCategory">
+            Hair
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Description -->
+      <div class="view-description-block">
+
+        <span class="view-field__label">
+          <i class="fas fa-align-left"></i>
+          Description
+        </span>
+
+        <p class="view-description-text" id="viewDescription">
+          Service description
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal__footer modal__footer--single">
+
+      <button class="btn btn--secondary" onclick="closeModal('viewModal')">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+<!--  EDIT SERVICE MODAL-->
+<div class="modal-overlay" id="editModal">
+  <div class="modal modal--edit">
+    <div class="modal__header">
+      <div class="modal__header-left">
+        <div class="modal-icon modal-icon--edit">
+          <i class="fas fa-pencil-alt"></i>
+        </div>
+        <div>
+          <h3 class="modal__title">Edit Service</h3>
+          <p class="modal__subtitle">Update service information</p>
+        </div>
+      </div>
+      <button class="modal__close" onclick="closeModal('editModal')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal__body">
+      <div class="form-grid">
+
+        <div class="form-group form-group--full">
+          <label class="form-label" for="editServiceName">
+            Service Name <span class="form-required">*</span>
+          </label>
+          <input type="text" id="editServiceName" class="form-input" placeholder="e.g. Classic Haircut"
+            value="Classic Haircut">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editCategory">
+            Category <span class="form-required">*</span>
+          </label>
+          <div class="form-select-wrapper">
+            <select id="editCategory" class="form-select">
+              <option value="">Select category</option>
+              <option value="hair" selected>Hair</option>
+              <option value="skin">Skin</option>
+              <option value="nail">Nail</option>
+              <option value="bridal">Bridal</option>
+              <option value="grooming">Grooming</option>
+            </select>
+            <i class="fas fa-chevron-down form-select-arrow"></i>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="editDuration">
+            Duration (minutes) <span class="form-required">*</span>
+          </label>
+          <input type="number" id="editDuration" class="form-input" placeholder="e.g. 30" value="30" min="5" max="480">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editPrice">
+            Price (₹) <span class="form-required">*</span>
+          </label>
+          <div class="form-input-prefix-wrapper">
+            <span class="form-input-prefix">₹</span>
+            <input type="number" id="editPrice" class="form-input form-input--prefix" placeholder="0.00" value="350"
+              min="0">
+          </div>
+        </div>
+
+        <div class="form-group form-group--full">
+          <label class="form-label" for="editDescription">Description</label>
+          <textarea id="editDescription" class="form-textarea" rows="3"
+            placeholder="Brief description of this service…">Precision cut with wash and blow-dry finish. Our expert stylists use premium tools to ensure an even, sharp cut tailored to your face shape.</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <div class="form-status-toggle">
+            <label class="toggle-switch toggle-switch--large">
+              <input type="checkbox" id="editStatus" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="form-status-label" id="editStatusLabel">Active</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal__footer">
+      <button class="btn btn--secondary" onclick="closeModal('editModal')">Cancel</button>
+      <button class="btn btn--primary" onclick="saveEdit()">
+        <i class="fas fa-save"></i> Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+  <i class="fas fa-check-circle toast__icon"></i>
+  <span class="toast__message" id="toastMessage">Changes saved successfully.</span>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/service/admin_service.js') }}"></script>
+{% endblock %}

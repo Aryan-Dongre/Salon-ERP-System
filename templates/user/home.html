@@ -1,0 +1,564 @@
+{% extends "user/base.html" %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user/home.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION-->
+
+<section class="hero-section">
+  <div class="hero-backdrop"></div>
+
+  <div class="hero-inner">
+
+    <!-- Left Content -->
+    <div class="hero-content">
+
+      <span class="hero-eyebrow">
+        <span class="eyebrow-dot"></span>
+        Luxury Salon Experience
+      </span>
+
+      <h1 class="hero-heading">
+        Elevate Your
+        <span class="hero-heading-accent">
+          Beauty &amp; Wellness
+        </span>
+        Experience
+      </h1>
+
+      <p class="hero-description">
+        Premium salon services delivered by certified experts —
+        crafted to help you look, feel, and move through the world
+        with effortless confidence.
+      </p>
+
+      <div class="hero-actions">
+
+        <a href="{{ url_for('user.appointment') }}" class="btn-primary-cta">
+
+          <i class="fas fa-calendar-check"></i>
+          Book Appointment
+        </a>
+
+        <a href="{{ url_for('user.services') }}" class="btn-secondary-cta">
+
+          Explore Services
+          <i class="fas fa-arrow-right"></i>
+        </a>
+
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="hero-badges">
+
+        <div class="hero-badge">
+          <i class="fas fa-star"></i>
+
+          <div class="badge-text">
+            <strong>4.9 / 5</strong>
+            <span>Rating</span>
+          </div>
+        </div>
+
+        <div class="hero-badge">
+          <i class="fas fa-users"></i>
+
+          <div class="badge-text">
+            <strong>5,000+</strong>
+            <span>Happy Clients</span>
+          </div>
+        </div>
+
+        <div class="hero-badge">
+          <i class="fas fa-award"></i>
+
+          <div class="badge-text">
+            <strong>10+</strong>
+            <span>Expert Stylists</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right Visual -->
+    <div class="hero-visual">
+
+      <div class="hero-image-frame">
+
+        <div class="hero-image-placeholder">
+          <div class="placeholder-inner">
+            <i class="fas fa-spa placeholder-icon"></i>
+            <span>Premium Salon</span>
+          </div>
+        </div>
+
+        <!-- Floating Cards -->
+        <div class="float-card float-card--top">
+          <i class="fas fa-scissors"></i>
+          <span>Expert Styling</span>
+        </div>
+
+        <div class="float-card float-card--bottom">
+
+          <div class="float-card-avatar">
+            <i class="fas fa-user-circle"></i>
+          </div>
+
+          <div class="float-card-info">
+            <strong>Just booked</strong>
+            <span>Bridal Makeup</span>
+          </div>
+
+          <div class="float-card-dot"></div>
+        </div>
+
+      </div>
+
+      <div class="deco-circle deco-circle--1"></div>
+      <div class="deco-circle deco-circle--2"></div>
+
+    </div>
+  
+
+  </div>
+
+  <!-- Scroll Indicator -->
+
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+
+</section>
+
+<!-- 
+     STATS SECTION
+ -->
+
+<section class="stats-section">
+  <div class="container-site">
+
+    
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <i class="fas fa-smile-beam"></i>
+        </div>
+
+        <div class="stat-body">
+          <span class="stat-number">
+            5,000<sup>+</sup>
+          </span>
+
+          <span class="stat-label">
+            Happy Clients
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <i class="fas fa-magic"></i>
+        </div>
+
+        <div class="stat-body">
+          <span class="stat-number">
+            50<sup>+</sup>
+          </span>
+
+          <span class="stat-label">
+            Beauty Services
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <i class="fas fa-user-tie"></i>
+        </div>
+
+        <div class="stat-body">
+          <span class="stat-number">
+            10<sup>+</sup>
+          </span>
+
+          <span class="stat-label">
+            Expert Professionals
+          </span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <i class="fas fa-medal"></i>
+        </div>
+
+        <div class="stat-body">
+          <span class="stat-number">
+            5<sup>+</sup>
+          </span>
+
+          <span class="stat-label">
+            Years Experience
+          </span>
+        </div>
+      </div>
+
+    </div>
+    
+
+  </div>
+</section>
+
+<!-- ABOUT SECTION
+ -->
+
+<section class="about-section" id="about">
+
+  <div class="container-site">
+
+    
+    <div class="about-grid">
+
+      <!-- Left -->
+      <div class="about-visual">
+
+        <div class="about-image-frame">
+
+          <div class="about-image-placeholder">
+            <i class="fas fa-cut placeholder-icon"></i>
+            <span>Our Studio</span>
+          </div>
+
+        </div>
+
+        <div class="about-badge-float">
+
+          <i class="fas fa-certificate"></i>
+
+          <div>
+            <strong>Award Winning</strong>
+            <span>Salon Studio</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right -->
+      <div class="about-content">
+
+        <span class="section-eyebrow">
+          About Us
+        </span>
+
+        <h2 class="section-heading">
+          Why Choose<br>
+          <em>Our Salon</em>
+        </h2>
+
+        <p class="about-description">
+          We believe beauty is deeply personal.
+          Every service at our studio is tailored —
+          not templated.
+        </p>
+
+        <div class="about-features">
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-id-badge"></i>
+            </div>
+
+            <div class="feature-text">
+              <h4>Certified Experts</h4>
+              <p>
+                Every stylist is certified and trained
+                in modern salon trends.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-leaf"></i>
+            </div>
+
+            <div class="feature-text">
+              <h4>Premium Products</h4>
+              <p>
+                We use salon-grade products for
+                healthier skin and hair.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+
+            <div class="feature-text">
+              <h4>Hygienic Environment</h4>
+              <p>
+                Clean and sterilized salon environment
+                for every visit.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-gem"></i>
+            </div>
+
+            <div class="feature-text">
+              <h4>Affordable Luxury</h4>
+              <p>
+                Luxury salon services made accessible
+                for everyone.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    
+
+  </div>
+</section>
+
+<!-- 
+     FEATURED SERVICES
+═ -->
+
+<section class="services-section" id="featured-services">
+
+  <div class="container-site">
+
+    
+    <div class="section-header">
+
+      <span class="section-eyebrow">
+        What We Offer
+      </span>
+
+      <h2 class="section-heading">
+        Featured <em>Services</em>
+      </h2>
+
+      <p class="section-subtext">
+        A curated selection of our most-loved
+        treatments.
+      </p>
+
+    </div>
+
+    <div class="services-grid">
+
+      {% if featured_services %}
+
+      {% for service in featured_services %}
+
+      <div class="service-card
+      {% if service.category_name == 'Hair' %}
+        service-card--primary
+      {% elif service.category_name == 'Skin' %}
+        service-card--accent
+      {% elif service.category_name == 'Bridal' %}
+        service-card--gold
+      {% else %}
+        service-card--primary
+      {% endif %}
+    ">
+
+        <div class="service-card-top">
+
+          <div class="service-icon-wrap">
+
+            {% if service.category_name == 'Hair' %}
+            <i class="fas fa-cut"></i>
+
+            {% elif service.category_name == 'Skin' %}
+            <i class="fas fa-spa"></i>
+
+            {% elif service.category_name == 'Bridal' %}
+            <i class="fas fa-heart"></i>
+
+            {% elif service.category_name == 'Groom' %}
+            <i class="fas fa-user-tie"></i>
+
+            {% else %}
+            <i class="fas fa-star"></i>
+            {% endif %}
+
+          </div>
+
+          <span class="service-tag">
+            {{ service.category_name }}
+          </span>
+
+        </div>
+
+        <div class="service-card-body">
+
+          <h3 class="service-title">
+            {{ service.service_name }}
+          </h3>
+
+          <p class="service-desc">
+            {{ service.description or
+            'Premium salon service tailored for your needs.' }}
+          </p>
+
+        </div>
+
+        <div class="service-card-footer">
+
+          <div class="service-price">
+            <span class="price-from">
+              Starting at
+            </span>
+
+            <span class="price-value">
+              ₹{{ service.price }}
+            </span>
+          </div>
+
+          <a href="{{ url_for('user.appointment', service_id=service.service_id) }}" class="service-cta">
+
+            Book Now
+            <i class="fas fa-arrow-right"></i>
+
+          </a>
+
+        </div>
+
+      </div>
+
+      {% endfor %}
+
+      {% else %}
+
+      <div class="empty-services">
+        <p>
+          Services will be available soon.
+        </p>
+      </div>
+
+      {% endif %}
+
+    </div>
+
+    <div class="services-footer">
+
+      <a href="{{ url_for('user.services') }}" class="btn-outline-primary">
+
+        View All Services
+        <i class="fas fa-th-large"></i>
+
+      </a>
+
+    </div>
+    
+
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+
+<section class="testimonials-section">
+  <div class="container-site">
+
+    
+    <div class="section-header">
+      <span class="section-eyebrow">
+        Client Stories
+      </span>
+
+      <h2 class="section-heading">
+        Words That <em>Inspire Us</em>
+      </h2>
+    </div>
+
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card">
+        <blockquote class="testimonial-quote">
+          "Amazing salon experience!"
+        </blockquote>
+
+        <div class="testimonial-author">
+          <strong>Priya Sharma</strong>
+        </div>
+      </div>
+
+      <div class="testimonial-card testimonial-card--featured">
+        <blockquote class="testimonial-quote">
+          "The best salon in the city."
+        </blockquote>
+
+        <div class="testimonial-author">
+          <strong>Ananya Mehta</strong>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <blockquote class="testimonial-quote">
+          "Professional and premium service."
+        </blockquote>
+
+        <div class="testimonial-author">
+          <strong>Rohit Kapoor</strong>
+        </div>
+      </div>
+
+    </div>
+    
+
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+
+<section class="cta-section">
+
+  <div class="container-site">
+
+    
+    <div class="cta-inner">
+
+      <span class="section-eyebrow cta-eyebrow">
+        Your Next Chapter Begins Here
+      </span>
+
+      <h2 class="cta-heading">
+        Ready For Your<br>
+        <em>Transformation?</em>
+      </h2>
+
+      <p class="cta-subtext">
+        Book your appointment today and
+        experience premium salon services.
+      </p>
+
+      <a href="{{ url_for('user.appointment') }}" class="btn-primary-cta btn-primary-cta--large">
+
+        <i class="fas fa-calendar-check"></i>
+        Book Appointment
+
+      </a>
+
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

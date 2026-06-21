@@ -1,0 +1,133 @@
+{% extends "user/base.html" %}
+{% block title %}My Appointments{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/user/my_appointment.css') }}">
+
+<div class="appt-page">
+
+
+<!-- HERO -->
+<header class="appt-hero">
+
+    <div class="appt-hero__ornament appt-hero__ornament--left"></div>
+    <div class="appt-hero__ornament appt-hero__ornament--right"></div>
+
+    <p class="appt-hero__eyebrow">
+        <span class="appt-hero__line"></span>
+        Your Private Calendar
+        <span class="appt-hero__line"></span>
+    </p>
+
+    <h1 class="appt-hero__title">
+        My Appointments
+    </h1>
+
+    <p class="appt-hero__subtitle">
+        Manage your upcoming visits and review your appointment details.
+    </p>
+
+</header>
+
+<!-- APPOINTMENTS -->
+<section class="appt-section">
+
+    <div class="appt-section__header">
+
+        <h2 class="appt-section__title">
+            Appointment Records
+        </h2>
+
+        <span class="appt-section__rule"></span>
+
+    </div>
+
+    {% if appointments %}
+
+    <div class="appt-grid">
+
+        {% for appointment in appointments %}
+
+        <article class="appt-card">
+
+            <div class="appt-card__top">
+
+                <h3 class="appt-card__service">
+                    {{ appointment.services }}
+                </h3>
+
+                <span class="status-badge status-badge--{{ appointment.appointment_status|lower }}">
+                    {{ appointment.appointment_status }}
+                </span>
+
+            </div>
+
+            <div class="appt-card__divider"></div>
+
+            <dl class="appt-card__details">
+
+                <div class="appt-card__detail">
+                    <dt>Date</dt>
+                    <dd>{{ appointment.appointment_date }}</dd>
+                </div>
+
+                <div class="appt-card__detail">
+                    <dt>Time</dt>
+                    <dd>{{ appointment.start_time }}</dd>
+                </div>
+
+                <div class="appt-card__detail">
+                    <dt>Stylist</dt>
+                    <dd>{{ appointment.staff_name }}</dd>
+                </div>
+
+                <div class="appt-card__detail">
+                    <dt>Payment</dt>
+                    <dd>
+                        <span class="payment-badge payment-badge--{{ appointment.payment_status|lower }}">
+                            {{ appointment.payment_status }}
+                        </span>
+                    </dd>
+                </div>
+
+            </dl>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-state__icon">
+            📅
+        </div>
+
+        <h3 class="empty-state__title">
+            No Appointments Found
+        </h3>
+
+        <p class="empty-state__message">
+            You haven't booked any appointments yet.
+        </p>
+
+        <a href="{{ url_for('user.appointment') }}"
+           class="empty-state__cta">
+            Book Appointment
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+</div>
+
+{% endblock %}

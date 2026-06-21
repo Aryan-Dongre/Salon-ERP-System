@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<!---============================Base file for Admin, Manager, Receptionist, and Staff ================-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        Salon ERP
+        {% endblock %}
+    </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <!-- Awesome Font-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    
+    <!-- Dashboard CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/dashboard.css') }}">
+
+    <!-- Page Specific CSS -->
+    {% block extra_css %}
+    {% endblock %}
+</head>
+
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="dashboard-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+
+            <!-- Logo -->
+            <div class="sidebar-logo">
+                <div class="logo-box">
+                    <i class="bi bi-scissors"></i>
+                </div>
+
+                <div class="logo-text">
+                    <h4>Salon ERP</h4>
+                    <span>Management System</span>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-menu">
+
+                <!-- Dashboard -->
+                <a href="/dashboard/" class="menu-item active">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- Appointments -->
+                <a href="
+                    {% if session['role_id'] == 1 %}
+                        {{ url_for('admin.appointment') }}
+
+                    {% elif session['role_id'] == 2 %}
+                        {{ url_for('manager.appointment') }}
+
+                    {% elif session['role_id'] == 3 %}
+                        {{ url_for('receptionist.appointment') }}
+
+                    {% elif session['role_id'] == 4 %}
+                        {{ url_for('staff.appointments') }}
+
+                    {% endif %}
+                 " class="menu-item">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Appointments</span>
+                </a>
+
+                <!-- Customers -->
+                {% if session['role_id'] in [1, 2, 3] %}
+                <a href="
+                    {% if session['role_id'] == 1 %}
+                        {{ url_for('admin.customer') }}
+
+                    {% elif session['role_id'] == 2 %}
+                        {{ url_for('manager.customer') }}
+
+                    {% elif session['role_id'] == 3 %}
+                        {{ url_for('receptionist.customer') }}
+
+                    {% endif %}
+                " class="menu-item">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Customers</span>
+                </a>
+                {% endif %}
+
+                <!-- Staff -->
+                {% if session['role_id'] in [1, 2, 3] %}
+                <a href="
+                    {% if session['role_id'] == 1 %}
+                        {{ url_for('admin.staff') }}
+
+                    {% elif session['role_id'] == 2 %}
+                        {{ url_for('manager.staff') }}
+
+                    {% elif session['role_id'] == 3 %}
+                        {{ url_for('receptionist.receptionist_staff') }}
+
+                    {% endif %}
+                " class="menu-item">
+                    <i class="bi bi-person-badge-fill"></i>
+                    <span>Staff</span>
+                </a>
+                {% endif %}
+
+                <!-- Services -->
+                {% if session['role_id'] in [1, 2, 3] %}
+                <a href="{% if session['role_id'] == 1 %}
+                        {{ url_for('admin.service') }}
+
+                    {% elif session['role_id'] == 2 %}
+                        {{ url_for('manager.service') }}
+
+                    {% elif session['role_id'] == 3 %}
+                        {{ url_for('receptionist.service') }}
+
+                    {% endif %}" class="menu-item">
+                    <i class="bi bi-scissors"></i>
+                    <span>Services</span>
+                </a>
+                {% endif %}
+
+            
+            </nav>
+
+            <!-- Sidebar User -->
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                     {% if session['role_id'] ==1 %} A 
+                            {% elif session ['role_id'] ==2 %} M
+                            {% elif session ['role_id'] ==3 %} S
+                            {% else %} U 
+                            {% endif %}
+                </div>
+
+                <div class="user-info">
+
+                    <h6>
+                        {% if session['role_id'] == 1 %}
+                        Admin
+
+                        {% elif session['role_id'] == 2 %}
+                        Manager
+
+                        {% elif session['role_id'] == 3 %}
+                        Receptionist
+
+                        {% elif session['role_id'] == 4 %}
+                        Staff
+                        {% endif %}
+                    </h6>
+
+                    <p>Salon ERP</p>
+
+                </div>
+
+                <a href="/logout" class="logout-btn">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+
+                <button class="toggle-btn" id="toggle-btn">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div class="navbar-title">
+                    <h3>Dashboard Overview</h3>
+                    <p>Manage your salon efficiently</p>
+                </div>
+
+                <div class="navbar-actions">
+
+                    <button class="nav-icon">
+                        <i class="bi bi-bell"></i>
+                    </button>
+
+                    <div class="profile-box">
+
+                        <div class="profile-avatar">
+                            {% if session['role_id'] ==1 %} A 
+                            {% elif session ['role_id'] ==2 %} M
+                            {% elif session ['role_id'] ==3 %} S
+                            {% else %} U 
+                            {% endif %}
+
+                        </div>
+
+                        <div class="profile-text">
+
+                            <h6>
+                                {% if session['role_id'] == 1 %}
+                                Admin
+
+                                {% elif session['role_id'] == 2 %}
+                                Manager
+
+                                {% elif session['role_id'] == 3 %}
+                                Receptionist
+
+                                {% elif session['role_id'] == 4 %}
+                                Staff
+                                {% endif %}
+                            </h6>
+
+                            <span>
+                                {% if session['role_id'] == 1 %}
+                                Full Access
+
+                                {% elif session['role_id'] == 2 %}
+                                Management Access
+
+                                {% elif session['role_id'] == 3 %}
+                                Front Desk Access
+
+                                {% elif session['role_id'] == 4 %}
+                                Staff Access
+                                {% endif %}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+            <!-- Dynamic Page Content -->
+            <section class="page-content">
+
+                {% block content %}
+                {% endblock %}
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Dashboard JS -->
+    <script src="{{ url_for('static', filename='js/dashboard/dashboard.js') }}"></script>
+
+    <!-- Page Specific JS -->
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+
+</html>

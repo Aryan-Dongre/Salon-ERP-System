@@ -1,0 +1,330 @@
+:root {
+    --gold: #C9A96E;
+    --gold-light: #E2C98A;
+    --gold-dark: #A07840;
+    --obsidian: #0D0D0D;
+    --charcoal: #1A1A1A;
+    --slate: #252525;
+    --mist: #E8E2D9;
+    --parchment: #F5F0E8;
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(201, 169, 110, 0.18);
+    --shadow-gold: rgba(201, 169, 110, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--obsidian);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    right: -20%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, rgba(201, 169, 110, 0.06) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -20%;
+    left: -15%;
+    width: 55vw;
+    height: 55vw;
+    background: radial-gradient(circle, rgba(201, 169, 110, 0.04) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.auth-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 2rem 1rem;
+}
+
+/* Card */
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow:
+        0 0 0 1px rgba(201, 169, 110, 0.07),
+        0 32px 80px rgba(0, 0, 0, 0.55),
+        0 0 60px var(--shadow-gold);
+    overflow: hidden;
+}
+
+/* Brand strip */
+.salon-brand {
+    background: linear-gradient(135deg, #1C1509 0%, #2A1F08 50%, #1C1509 100%);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1.8rem 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.salon-brand::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+}
+
+.brand-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-light));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.85rem;
+    box-shadow: 0 0 24px rgba(201, 169, 110, 0.35);
+}
+
+.brand-icon i {
+    color: var(--obsidian);
+    font-size: 1.15rem;
+}
+
+.brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold-light);
+    font-size: 1.45rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+}
+
+.brand-tagline {
+    color: rgba(232, 226, 217, 0.4);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+/* Card body */
+.card-body-inner {
+    padding: 1.8rem 2.2rem 2.2rem;
+}
+
+.page-heading {
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--mist);
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.25rem;
+    text-align: center;
+}
+
+.page-subheading {
+    color: rgba(232, 226, 217, 0.35);
+    font-size: 0.74rem;
+    text-align: center;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.5rem;
+}
+
+/* Form labels */
+.form-label {
+    color: rgba(232, 226, 217, 0.65);
+    font-size: 0.73rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.42rem;
+}
+
+/* Inputs */
+.form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(201, 169, 110, 0.2) !important;
+    color: var(--mist) !important;
+    border-radius: 10px !important;
+    padding: 0.72rem 1rem !important;
+    font-size: 0.9rem !important;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
+}
+
+.form-control::placeholder {
+    color: rgba(232, 226, 217, 0.22) !important;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.12) !important;
+    outline: none !important;
+}
+
+/* Input with icon */
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap .input-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold-dark);
+    font-size: 0.82rem;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.input-wrap .form-control {
+    padding-left: 2.5rem !important;
+}
+
+.input-wrap .form-control-pwd {
+    padding-left: 2.5rem !important;
+    border-radius: 10px 0 0 10px !important;
+}
+
+/* Password group */
+.input-group .form-control {
+    border-right: none !important;
+    border-radius: 10px 0 0 10px !important;
+}
+
+.toggle-pwd {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(201, 169, 110, 0.2);
+    border-left: none;
+    color: rgba(201, 169, 110, 0.5);
+    border-radius: 0 10px 10px 0;
+    padding: 0 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.toggle-pwd:hover {
+    color: var(--gold);
+    background: rgba(201, 169, 110, 0.08);
+}
+
+/* Password strength */
+.pwd-strength-bar {
+    display: flex;
+    gap: 4px;
+    margin-top: 0.5rem;
+}
+
+.pwd-strength-bar .seg {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease;
+}
+
+.pwd-strength-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: rgba(232, 226, 217, 0.3);
+    margin-top: 0.3rem;
+    transition: color 0.3s ease;
+}
+
+/* Strength states */
+.strength-weak .seg:nth-child(1) {
+    background: #e05454;
+}
+
+.strength-fair .seg:nth-child(1),
+.strength-fair .seg:nth-child(2) {
+    background: #e09b3d;
+}
+
+.strength-good .seg:nth-child(1),
+.strength-good .seg:nth-child(2),
+.strength-good .seg:nth-child(3) {
+    background: #c9a96e;
+}
+
+.strength-strong .seg {
+    background: #6dbf82;
+}
+
+/* Primary button */
+.btn-primary {
+    background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 60%, var(--gold-light) 100%);
+    border: none;
+    color: var(--obsidian);
+    font-weight: 600;
+    font-size: 0.84rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 10px;
+    padding: 0.78rem 1rem;
+    transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 20px rgba(201, 169, 110, 0.28);
+}
+
+.btn-primary:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(201, 169, 110, 0.38);
+    color: var(--obsidian);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Footer */
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.3rem;
+    border-top: 1px solid rgba(201, 169, 110, 0.1);
+    font-size: 0.78rem;
+    color: rgba(232, 226, 217, 0.33);
+}
+
+.auth-footer a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .card-body-inner {
+        padding: 1.4rem 1.2rem 1.7rem;
+    }
+
+    .salon-brand {
+        padding: 1.4rem 1.2rem 1.2rem;
+    }
+}

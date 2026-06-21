@@ -1,0 +1,450 @@
+{% extends "dashboard/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/appointment/manager_appointments.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="appt-page">
+
+  <!-- ───────────── PAGE HEADER ───────────── -->
+  <header class="appt-header appt-section">
+    <div class="appt-header__meta">
+      <p class="appt-header__eyebrow">Manager Portal</p>
+      <h1 class="appt-header__title">Appointment Management</h1>
+      <p class="appt-header__subtitle">Manage customer bookings and schedules</p>
+    </div>
+    <button class="appt-btn-export" id="apptExportBtn" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+      </svg>
+      Export
+    </button>
+  </header>
+
+  <!-- ───────────── STATS CARDS ───────────── -->
+  <section class="appt-stats appt-section" aria-label="Appointment statistics">
+
+    <div class="appt-stat-card appt-stat-card--today">
+      <div class="appt-stat__icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+        </svg>
+      </div>
+      <div class="appt-stat__value" id="statToday">{{ stats.total | default(0) }}</div>
+      <div class="appt-stat__label">Total Appointments</div>
+    </div>
+
+    <div class="appt-stat-card appt-stat-card--pending">
+      <div class="appt-stat__icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="appt-stat__value" id="statPending">{{ stats.scheduled | default(0) }}</div>
+      <div class="appt-stat__label">Pending</div>
+    </div>
+
+    <div class="appt-stat-card appt-stat-card--done">
+      <div class="appt-stat__icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="appt-stat__value" id="statCompleted">{{ stats.completed | default(0) }}</div>
+      <div class="appt-stat__label">Completed</div>
+    </div>
+
+    <div class="appt-stat-card appt-stat-card--cancel">
+      <div class="appt-stat__icon-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="appt-stat__value" id="statCancelled">{{ stats.cancelled | default(0) }}</div>
+      <div class="appt-stat__label">Cancelled</div>
+    </div>
+
+  </section>
+
+  <!-- ───────────── FILTER TOOLBAR ───────────── -->
+  <section class="appt-filter-bar appt-section" aria-label="Appointment filters">
+
+    <!-- Search -->
+    <div class="appt-filter-bar__group appt-filter-bar__group--search">
+      <span class="appt-filter-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+      </span>
+      <input type="text" id="apptSearch" class="appt-filter-input" placeholder="Search customer, phone or ID…"
+        autocomplete="off" aria-label="Search appointments">
+    </div>
+
+    <!-- Status Filter -->
+    <div class="appt-filter-bar__group appt-filter-select-wrap">
+      <span class="appt-filter-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+        </svg>
+      </span>
+      <select id="apptStatusFilter" class="appt-filter-select" aria-label="Filter by status">
+        <option value="">All Status</option>
+        <option value="SCHEDULED">Scheduled</option>
+        <option value="CONFIRMED">Confirmed</option>
+        <option value="IN_PROGRESS">In Progress</option>
+        <option value="COMPLETED">Completed</option>
+        <option value="CANCELLED">Cancelled</option>
+      </select>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="appt-filter-bar__group appt-filter-date-wrap">
+      <span class="appt-filter-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+        </svg>
+      </span>
+      <input type="date" id="apptDateFilter" class="appt-filter-input" aria-label="Filter by date">
+    </div>
+
+    <!-- Reset -->
+    <button class="appt-btn-reset" id="apptResetBtn" type="button" aria-label="Reset filters">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+      </svg>
+      Reset
+    </button>
+
+  </section>
+
+  <!-- ───────────── APPOINTMENTS TABLE ───────────── -->
+  <section class="appt-section">
+    <div class="appt-table-wrap">
+
+      <!-- Table Header Bar -->
+      <div class="appt-table-header">
+        <div style="display:flex; align-items:center; gap:0.65rem;">
+          <h2 class="appt-table-header__title">All Appointments</h2>
+          <span class="appt-table-header__count" id="apptCount">{{ appointments | length }} records</span>
+        </div>
+      </div>
+
+      <!-- Desktop Table -->
+      <div class="appt-table-scroll">
+        <table class="appt-table" id="apptTable">
+          <thead>
+            <tr>
+              <th>Appt. ID</th>
+              <th>Customer</th>
+              <th>Service</th>
+              <th>Staff</th>
+              <th>Date &amp; Time</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="apptTableBody">
+            {# ─── Jinja2 Loop ─── #}
+            
+            {% for appt in appointments %}
+            <tr class="appt-row" data-id="{{ appt.id }}" data-customer="{{ appt.customer_name }}"
+              data-phone="{{ appt.customer_phone }}" data-service="{{ appt.service_name }}"
+              data-staff="{{ appt.staff_name }}" data-date="{{ appt.date }}"
+              data-time="{{ appt.start_time }} - {{ appt.end_time }}"
+              data-status="{{ appt.status  }}" data-notes="{{ appt.notes | default('') }}">
+              <td><span class="appt-id">#{{ appt.id }}</span></td>
+              <td>
+                <div class="appt-customer">
+                  <div class="appt-avatar">{{ appt.customer_name[:2] | upper }}</div>
+                  <div>
+                    <div class="appt-customer__name">{{ appt.customer_name }}</div>
+                    <div class="appt-customer__phone">{{ appt.customer_phone }}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="appt-service">{{ appt.service_name }}</span></td>
+              <td>{{ appt.staff_name }}</td>
+              <td>
+                <div class="appt-datetime">
+                  <div class="appt-datetime__date">{{ appt.date }}</div>
+                  <div class="appt-datetime__time">{{ appt.start_time }} - {{ appt.end_time }}</div>
+                </div>
+              </td>
+              <td>
+                <span class="appt-badge appt-badge--{{ appt.status | lower | replace(' ', '') }}">
+                  {{ appt.status }}
+                </span>
+              </td>
+              <td>
+                <div class="appt-actions">
+                  <button class="appt-btn-action appt-btn-view" type="button" onclick="apptOpenView(this.closest('tr'))"
+                    title="View">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    View
+                  </button>
+                  <button class="appt-btn-action appt-btn-edit" type="button" onclick="apptOpenEdit(this.closest('tr'))"
+                    title="Edit">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                      stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                    </svg>
+                    Edit
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Card List -->
+      <div class="appt-card-list" id="apptCardList">
+        <!-- Populated by JS mirror of table rows for mobile -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="appt-empty" id="apptEmpty" role="status" aria-live="polite">
+        <div class="appt-empty__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.4"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+          </svg>
+        </div>
+        <h3 class="appt-empty__title">No appointments found</h3>
+        <p class="appt-empty__sub">Try changing your filters or search query.</p>
+      </div>
+
+      <!-- Pagination -->
+      <div class="appt-pagination" id="apptPagination">
+        <span class="appt-pagination__info" id="apptPaginationInfo">Showing 1–{{ appointments | length }}
+          of {{ appointments | length }} appointments</span>
+        <div class="appt-pagination__btns">
+          <button class="appt-page-btn" type="button" title="Previous" id="apptPrevBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <button class="appt-page-btn is-active" type="button">1</button>
+          <button class="appt-page-btn" type="button" id="apptNextBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- /.appt-page -->
+
+<!-- ═══════════════════════════════════════
+     VIEW APPOINTMENT MODAL
+═══════════════════════════════════════ -->
+<div class="appt-modal-overlay" id="apptViewModal" role="dialog" aria-modal="true" aria-label="View appointment">
+  <div class="appt-modal">
+    <div class="appt-modal__head">
+      <div style="display:flex; align-items:flex-start; gap:0.85rem;">
+        <div class="appt-modal__head-icon appt-modal__head-icon--view">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="appt-modal__title">Appointment Details</h3>
+          <p class="appt-modal__subtitle" id="viewModalId">—</p>
+        </div>
+      </div>
+      <button class="appt-modal__close" type="button" onclick="apptCloseModal('apptViewModal')" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="appt-modal__body">
+      <div class="appt-info-grid">
+        <div class="appt-info-section-title">Customer Information</div>
+        <div class="appt-info-item">
+          <span class="appt-info-label">Customer Name</span>
+          <span class="appt-info-value" id="view-customer">—</span>
+        </div>
+        <div class="appt-info-item">
+          <span class="appt-info-label">Phone</span>
+          <span class="appt-info-value" id="view-phone">—</span>
+        </div>
+        <div class="appt-info-section-title">Appointment Information</div>
+        <div class="appt-info-item">
+          <span class="appt-info-label">Service</span>
+          <span class="appt-info-value" id="view-service">—</span>
+        </div>
+        <div class="appt-info-item">
+          <span class="appt-info-label">Assigned Staff</span>
+          <span class="appt-info-value" id="view-staff">—</span>
+        </div>
+        <div class="appt-info-item">
+          <span class="appt-info-label">Date</span>
+          <span class="appt-info-value" id="view-date">—</span>
+        </div>
+        <div class="appt-info-item">
+          <span class="appt-info-label">Time</span>
+          <span class="appt-info-value" id="view-time">—</span>
+        </div>
+        <div class="appt-info-item">
+          <span class="appt-info-label">Status</span>
+          <span class="appt-info-value" id="view-status">—</span>
+        </div>
+        <div class="appt-info-item appt-info-item--full">
+          <span class="appt-info-label">Notes</span>
+          <span class="appt-info-value" id="view-notes">—</span>
+        </div>
+      </div>
+    </div>
+    <div class="appt-modal__foot">
+      <button class="appt-btn-modal appt-btn-modal--cancel" type="button"
+        onclick="apptCloseModal('apptViewModal')">Close</button>
+      <button class="appt-btn-modal appt-btn-modal--save" type="button" onclick="apptSwitchToEdit()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+        </svg>
+        Edit Appointment
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     EDIT APPOINTMENT MODAL
+═══════════════════════════════════════ -->
+<div class="appt-modal-overlay" id="apptEditModal" role="dialog" aria-modal="true" aria-label="Edit appointment">
+  <div class="appt-modal">
+    <div class="appt-modal__head">
+      <div style="display:flex; align-items:flex-start; gap:0.85rem;">
+        <div class="appt-modal__head-icon appt-modal__head-icon--edit">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="appt-modal__title">Edit Appointment</h3>
+          <p class="appt-modal__subtitle" id="editModalId">—</p>
+        </div>
+      </div>
+      <button class="appt-modal__close" type="button" onclick="apptCloseModal('apptEditModal')" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="appt-modal__body">
+
+      <!-- Locked customer info -->
+      <p
+        style="font-size:0.72rem; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--appt-text-soft); margin:0 0 0.75rem;">
+        Customer (Read-only)</p>
+      <div
+        style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:1.35rem; padding-bottom:1.35rem; border-bottom: 1px solid var(--appt-border);">
+        <div class="appt-form-group" style="margin:0;">
+          <label class="appt-form-label">Customer Name</label>
+          <input type="text" class="appt-form-control" id="edit-customer" readonly>
+          <span class="appt-form-locked-note">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            Locked
+          </span>
+        </div>
+        <div class="appt-form-group" style="margin:0;">
+          <label class="appt-form-label">Phone</label>
+          <input type="text" class="appt-form-control" id="edit-phone" readonly>
+          <span class="appt-form-locked-note">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            Locked
+          </span>
+        </div>
+      </div>
+
+      <!-- Editable fields -->
+      <div class="appt-form-group">
+        <label class="appt-form-label" for="edit-status">Status</label>
+        <select class="appt-form-control" id="edit-status">
+          <option value="scheduled">Scheduled</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="in_progress">In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div class="appt-form-group">
+        <label class="appt-form-label" for="edit-staff">Assigned Staff</label>
+        <select class="appt-form-control" id="edit-staff">
+          {% for staff in staff_list %}
+          <option value="{{ staff.staff_id }}">{{ staff.staff_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="appt-form-group">
+        <label class="appt-form-label" for="edit-notes">Notes</label>
+        <textarea class="appt-form-control" id="edit-notes" placeholder="Add internal notes…" rows="3"></textarea>
+      </div>
+
+    </div>
+    <div class="appt-modal__foot">
+      <button class="appt-btn-modal appt-btn-modal--cancel" type="button"
+        onclick="apptCloseModal('apptEditModal')">Cancel</button>
+      <button class="appt-btn-modal appt-btn-modal--save" type="button" onclick="apptSaveEdit()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+        Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/appointment/manager_appointments.js') }}"></script>
+{% endblock %}

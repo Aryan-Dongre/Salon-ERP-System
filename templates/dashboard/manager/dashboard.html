@@ -1,0 +1,388 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}
+Manager Dashboard — Salon ERP
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard/manager_dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<div class="page-header mb-4">
+
+    <div>
+        <h4 class="page-title mb-1">
+            Manager Dashboard
+        </h4>
+
+        <p class="page-subtitle mb-0">
+            <i class="bi bi-calendar3 me-1"></i>
+            {{ current_date | default("Monday, 01 June 2026") }}
+        </p>
+    </div>
+
+    <div class="header-actions">
+        <span class="salon-badge">
+            <i class="bi bi-shop me-1"></i>
+            Salon Manager View
+        </span>
+    </div>
+
+</div>
+
+
+<!-- STAT CARDS -->
+<div class="row g-3 mb-4" id="statCards">
+
+    <!-- Today's Appointments -->
+    <div class="col-6 col-md-4 col-xl-4">
+
+        <div class="stat-card stat-card--blue">
+
+            <div class="stat-card__icon-wrap">
+                <i class="bi bi-calendar-check"></i>
+            </div>
+
+            <div class="stat-card__body">
+                <p class="stat-card__label">
+                    Today's Appointments
+                </p>
+
+                <h3 class="stat-card__value">
+                    {{ todays_appointments }}
+                </h3>
+
+                <span class="stat-card__sub">
+                    <i class="bi bi-arrow-up-short"></i>
+                    3 more than yesterday
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Pending Appointments -->
+    <div class="col-6 col-md-4 col-xl-4">
+
+        <div class="stat-card stat-card--orange">
+
+            <div class="stat-card__icon-wrap">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+
+            <div class="stat-card__body">
+                <p class="stat-card__label">
+                    Pending Appointments
+                </p>
+
+                <h3 class="stat-card__value">
+                    {{pending_appointments }}
+                </h3>
+
+                <span class="stat-card__sub">
+                    <i class="bi bi-clock me-1"></i>
+                    Awaiting confirmation
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Available Staff -->
+    <div class="col-6 col-md-4 col-xl-4">
+
+        <div class="stat-card stat-card--purple">
+
+            <div class="stat-card__icon-wrap">
+                <i class="bi bi-people-fill"></i>
+            </div>
+
+            <div class="stat-card__body">
+                <p class="stat-card__label">
+                    Available Staff
+                </p>
+
+                <h3 class="stat-card__value">
+                    {{ available_staff  }}
+                </h3>
+
+                <span class="stat-card__sub">
+                    <i class="bi bi-check-circle me-1"></i>
+                    {{  total_staff }} total on roster
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Today's Revenue -->
+    <div class="col-6 col-md-4 col-xl-4">
+
+        <div class="stat-card stat-card--green">
+
+            <div class="stat-card__icon-wrap">
+                <i class="bi bi-currency-rupee"></i>
+            </div>
+
+            <div class="stat-card__body">
+                <p class="stat-card__label">
+                    Today's Revenue
+                </p>
+
+                <h3 class="stat-card__value">
+                    ₹{{ todays_revenue }}
+                </h3>
+
+                <span class="stat-card__sub">
+                    <i class="bi bi-graph-up-arrow me-1"></i>
+                    +12% vs yesterday
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Walk-in Customers -->
+    <div class="col-6 col-md-4 col-xl-4">
+
+        <div class="stat-card stat-card--rose">
+
+            <div class="stat-card__icon-wrap">
+                <i class="bi bi-person-walking"></i>
+            </div>
+
+            <div class="stat-card__body">
+                <p class="stat-card__label">
+                    Walk-in Customers
+                </p>
+
+                <h3 class="stat-card__value">
+                    {{ walk_in_customers }}
+                </h3>
+
+                <span class="stat-card__sub">
+                    <i class="bi bi-door-open me-1"></i>
+                    Today's drop-ins
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Services Completed -->
+    <div class="col-6 col-md-4 col-xl-4">
+
+        <div class="stat-card stat-card--indigo">
+
+            <div class="stat-card__icon-wrap">
+                <i class="bi bi-scissors"></i>
+            </div>
+
+            <div class="stat-card__body">
+                <p class="stat-card__label">
+                    Services Completed
+                </p>
+
+                <h3 class="stat-card__value">
+                    {{ services_completed }}
+                </h3>
+
+                <span class="stat-card__sub">
+                    <i class="bi bi-check2-all me-1"></i>
+                    Since morning open
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<!-- SECOND SECTION -->
+<div class="row g-3">
+
+    <!-- Today's Schedule -->
+    <div class="col-12 col-lg-8">
+
+        <div class="erp-card h-100">
+
+            <div class="erp-card__header">
+
+                <div>
+                    <h6 class="erp-card__title">
+                        Today's Schedule
+                    </h6>
+
+                    <p class="erp-card__subtitle">
+                        Today's salon appointments
+                    </p>
+                </div>
+
+                <button class="btn btn-sm btn-outline-secondary rounded-3"
+                        id="refreshSchedule">
+
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table erp-table align-middle mb-0"
+                       id="scheduleTable">
+
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Service</th>
+                            <th>Staff Assigned</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for appt in appointments %}
+
+                        <tr>
+
+                            <td>
+                                <div class="customer-cell">
+                                    <span class="customer-avatar">
+                                        {{ appt[0][0] }}
+                                    </span>
+
+                                    <span>
+                                        {{ appt[0] }}
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>{{ appt[1] }}</td>
+
+                            <td>
+                                <div class="staff-cell">
+                                    <i class="bi bi-person-circle me-1 text-muted"></i>
+                                    {{ appt[2] }}
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="time-badge">
+                                    <i class="bi bi-clock me-1"></i>
+                                    {{ appt[3] }}
+                                </span>
+                            </td>
+
+                            <td>
+
+                                {% if appt[4] == 'confirmed' %}
+                                <span class="badge status-badge status-confirmed">
+                                    Confirmed
+                                </span>
+
+                                {% elif appt[4] == 'pending' %}
+                                <span class="badge status-badge status-pending">
+                                    Pending
+                                </span>
+
+                                {% elif appt[4] == 'completed' %}
+                                <span class="badge status-badge status-completed">
+                                    Completed
+                                </span>
+
+                                {% elif appt[4] == 'cancelled' %}
+                                <span class="badge status-badge status-cancelled">
+                                    Cancelled
+                                </span>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Quick Actions -->
+    <div class="col-12 col-lg-4">
+
+        <div class="erp-card h-100">
+
+            <div class="erp-card__header">
+                <div>
+                    <h6 class="erp-card__title">
+                        Quick Actions
+                    </h6>
+
+                    <p class="erp-card__subtitle">
+                        Manage salon quickly
+                    </p>
+                </div>
+            </div>
+
+            <div class="quick-actions-grid">
+
+                <a href="{{ url_for('manager.appointment')}}"
+                   class="quick-action-btn quick-action-btn--primary">
+                    <span class="quick-action-btn__icon">
+                        <i class="bi bi-calendar-plus"></i>
+                    </span>
+                    <span class="quick-action-btn__text">
+                        <strong>Add Appointment</strong>
+                        <small>Book a new slot</small>
+                    </span>
+                </a>
+
+                <a href="{{ url_for('manager.staff')}}"
+                   class="quick-action-btn quick-action-btn--secondary">
+                    <span class="quick-action-btn__icon">
+                        <i class="bi bi-people"></i>
+                    </span>
+                    <span class="quick-action-btn__text">
+                        <strong>View Staff</strong>
+                        <small>Attendance & schedule</small>
+                    </span>
+                </a>
+
+                <a href="{{ url_for('manager.customer')}}"
+                   class="quick-action-btn quick-action-btn--accent">
+                    <span class="quick-action-btn__icon">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </span>
+                    <span class="quick-action-btn__text">
+                        <strong>Customer Records</strong>
+                        <small>History & profiles</small>
+                    </span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static',
+filename='js/dashboard/manager_dashboard.js') }}"></script>
+{% endblock %}

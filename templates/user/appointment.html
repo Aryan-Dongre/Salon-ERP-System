@@ -1,0 +1,308 @@
+{% extends "user/base.html" %}
+{% block title %}Book Appointment | Luxury Salon{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user/appointment.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ════
+     HERO SECTION
+-->
+<section class="appt-hero">
+  <!-- Decorative glow orbs -->
+  <div class="appt-glow appt-glow--left"></div>
+  <div class="appt-glow appt-glow--right"></div>
+
+  <div class="container appt-hero__inner">
+    <p class="appt-hero__eyebrow">
+      <span class="appt-hero__eyebrow-line"></span>
+      Luxury Appointment Booking
+      <span class="appt-hero__eyebrow-line"></span>
+    </p>
+    <h1 class="appt-hero__heading">
+      Reserve Your<br>
+      <span class="appt-hero__heading-accent">Premium Experience</span>
+    </h1>
+    <p class="appt-hero__sub">
+      Select your preferred services and let our specialists craft<br class="d-none d-md-block">
+      an experience designed exclusively for you.
+    </p>
+  </div>
+
+  <div class="appt-hero__divider">
+    <span class="appt-hero__divider-gem">✦</span>
+  </div>
+</section>
+
+
+<!-- MAIN BOOKING SECTION-->
+<section class="appt-booking">
+  <div class="container">
+
+    <form id="appointmentForm" method="POST" action="{{ url_for('user.appointment') }}">
+      <div class="appt-grid">
+
+        <!-- ─────────────────────────────
+             LEFT — CUSTOMER FORM
+        ───────────────────────────── -->
+        <div class="appt-col appt-col--form">
+          <div class="appt-card">
+
+            <!-- Card header -->
+            <div class="appt-card__header">
+              <span class="appt-card__header-icon"><i class="fa-regular fa-user"></i></span>
+              <div>
+                <p class="appt-card__header-eyebrow">Step 01</p>
+                <h2 class="appt-card__header-title">Personal Details</h2>
+              </div>
+            </div>
+
+            <!-- Full Name -->
+            <div class="appt-field">
+              <label class="appt-field__label" for="full_name">Full Name</label>
+              <div class="appt-field__wrap">
+                <i class="fa-regular fa-user appt-field__icon"></i>
+                <input
+                  type="text"
+                  class="appt-field__input"
+                  id="full_name"
+                  name="full_name"
+                  placeholder="Your full name"
+                  value="{{  draft.get('full_name','') }}"
+                  required>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="appt-field">
+              <label class="appt-field__label" for="email">Email Address</label>
+              <div class="appt-field__wrap">
+                <i class="fa-regular fa-envelope appt-field__icon"></i>
+                <input
+                  type="email"
+                  class="appt-field__input"
+                  id="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  value="{{ draft.get('email','') }}"
+                  required>
+              </div>
+            </div>
+
+            <!-- Phone -->
+            <div class="appt-field">
+              <label class="appt-field__label" for="phone">Phone Number</label>
+              <div class="appt-field__wrap">
+                <i class="fa-solid fa-phone appt-field__icon"></i>
+                <input
+                  type="tel"
+                  class="appt-field__input"
+                  id="phone"
+                  name="phone"
+                  placeholder="+91 00000 00000"
+                  value="{{ draft.get('phone','') }}"
+                  required>
+              </div>
+            </div>
+
+            <!-- Date -->
+            <div class="appt-field">
+              <label class="appt-field__label" for="booking_date">Preferred Date</label>
+              <div class="appt-field__wrap">
+                <i class="fa-regular fa-calendar appt-field__icon"></i>
+                <input
+                  type="date"
+                  class="appt-field__input appt-field__input--date"
+                  id="booking_date"
+                  value="{{ draft.get('date', '')}}"
+                  name="date"
+                  min="{{ today }}"
+                  required>
+              </div>
+            </div>
+
+            <!-- Time Slots -->
+            <div class="appt-slots">
+              <div class="appt-slots__header">
+                <span class="appt-slots__header-icon"><i class="fa-regular fa-clock"></i></span>
+                <div>
+                  <p class="appt-card__header-eyebrow">Step 02</p>
+                  <h2 class="appt-card__header-title">Select Time Slot</h2>
+                </div>
+              </div>
+
+              <div class="appt-slots__grid" id="slotGrid">
+                {% for slot in [
+                  ('10:00:00','10:00 AM'), ('10:30:00','10:30 AM'),
+                  ('11:00:00','11:00 AM'), ('11:30:00','11:30 AM'),
+                  ('12:00:00','12:00 PM'), ('12:30:00','12:30 PM'),
+                  ('14:00:00','02:00 PM'), ('14:30:00','02:30 PM'),
+                  ('15:00:00','03:00 PM'), ('15:30:00','03:30 PM'),
+                  ('16:00:00','04:00 PM'), ('16:30:00','04:30 PM'),
+                  ('17:15:00','05:15 PM'), ('17:45:00','05:45 PM'),
+                  ('18:30:00','06:30 PM'), ('19:00:00','07:00 PM')
+                ] %}
+                  <button
+                    type="button"
+                    class="slot-btn"
+                    data-time="{{ slot[0] }}">
+                    {{ slot[1] }}
+                  </button>
+                {% endfor %}
+              </div>   
+
+              <!-- Hidden time field -->
+              <input type="hidden" 
+              name="time" 
+              id="selectedTime"
+              value="{{ draft.get('time', '')}}">
+            </div>
+
+            <!-- Total Amount -->
+            <div class="appt-total">
+              <div class="appt-total__inner">
+                <span class="appt-total__label">Total Amount</span>
+                <span class="appt-total__amount">
+                  ₹&thinsp;<span id="totalAmount">{{ total_amount }}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- CTA Submit -->
+            <button
+              type="submit"
+              id="confirmBtn"
+              class="appt-cta"
+              disabled>
+              <span class="appt-cta__text">Continue To Payment</span>
+              <i class="fa-solid fa-arrow-right appt-cta__icon"></i>
+            </button>
+
+            <p class="appt-hint" id="apptHint">
+              <i class="fa-solid fa-circle-info"></i>
+              Please select a service and time slot to continue.
+            </p>
+
+          </div><!-- /.appt-card -->
+        </div><!-- /.appt-col--form -->
+
+
+        <!-- ─────────────────────────────
+             RIGHT — SERVICE SUMMARY
+        ───────────────────────────── -->
+        <div class="appt-col appt-col--summary">
+          <div class="appt-card appt-card--sticky">
+
+            <!-- Card header -->
+            <div class="appt-card__header">
+              <span class="appt-card__header-icon"><i class="fa-solid fa-sparkles"></i></span>
+              <div>
+                <p class="appt-card__header-eyebrow">Your Selection</p>
+                <h2 class="appt-card__header-title">Selected Services</h2>
+              </div>
+            </div>
+
+            <!-- Service list -->
+            <div id="selectedServices" class="appt-services">
+              {% for service in service_list %}
+                <div
+                  class="appt-service"
+                  data-id="{{ service.service_id }}"
+                  data-price="{{ service.price }}">
+
+                  <!-- Icon based on category -->
+                  <div class="appt-service__icon">
+                    {% set cat = service.category_name | lower if service.category_name else '' %}
+                    {% if 'hair' in cat %}
+                      <i class="fa-solid fa-scissors"></i>
+                    {% elif 'skin' in cat or 'facial' in cat %}
+                      <i class="fa-solid fa-spa"></i>
+                    {% elif 'bridal' in cat %}
+                      <i class="fa-solid fa-gem"></i>
+                    {% elif 'groom' in cat %}
+                      <i class="fa-solid fa-user-tie"></i>
+                    {% else %}
+                      <i class="fa-solid fa-star"></i>
+                    {% endif %}
+                  </div>
+
+                  <!-- Details -->
+                  <div class="appt-service__details">
+                    <span class="appt-service__name">{{ service.service_name }}</span>
+                    {% if service.duration_minutes %}
+                      <span class="appt-service__duration">
+                        <i class="fa-regular fa-clock"></i> {{ service.duration_minutes }} min
+                      </span>
+                    {% endif %}
+                  </div>
+
+                  <!-- Price + Remove -->
+                  <div class="appt-service__right">
+                    <span class="appt-service__price">₹{{ service.price }}</span>
+                    <button
+                      type="button"
+                      class="appt-service__remove remove-service"
+                      title="Remove service">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Hidden input preserved outside .appt-service for POST -->
+                <input type="hidden" name="services" value="{{ service.service_id }}" class="service-hidden">
+              {% endfor %}
+
+              <!-- Empty state -->
+              {% if not service_list %}
+                <div class="appt-empty" id="emptyState">
+                  <i class="fa-regular fa-folder-open appt-empty__icon"></i>
+                  <p class="appt-empty__text">No services selected yet.</p>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Price Breakdown -->
+            <div class="appt-breakdown">
+              <div class="appt-breakdown__row">
+                <span class="appt-breakdown__label">Subtotal</span>
+                <span class="appt-breakdown__val">
+                  ₹<span id="breakdownSubtotal">{{ total_amount }}</span>
+                </span>
+              </div>
+              <div class="appt-breakdown__row">
+                <span class="appt-breakdown__label">Taxes & Fees</span>
+                <span class="appt-breakdown__val appt-breakdown__val--muted">₹0</span>
+              </div>
+              <div class="appt-breakdown__divider"></div>
+              <div class="appt-breakdown__row appt-breakdown__row--total">
+                <span class="appt-breakdown__label">Total</span>
+                <span class="appt-breakdown__val appt-breakdown__val--gold">
+                  ₹<span id="breakdownTotal">{{ total_amount }}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Add More Services -->
+            <a href="#" 
+              id="addMoreServicesBtn" 
+              class="appt-add-more">
+              <i class="fa-solid fa-plus"></i>
+              Add More Services
+            </a>
+
+          </div><!-- /.appt-card--sticky -->
+        </div><!-- /.appt-col--summary -->
+
+      </div><!-- /.appt-grid -->
+    </form>
+
+  </div><!-- /.container -->
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/user/appointment.js') }}"></script>
+{% endblock %}
