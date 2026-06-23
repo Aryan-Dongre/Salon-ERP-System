@@ -76,7 +76,6 @@ def forgot_password():
 
 # Reset password part
 
-
 def reset_password(token):
 
     # Verify signed token

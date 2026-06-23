@@ -148,7 +148,8 @@
                 <div class="user-avatar">
                      {% if session['role_id'] ==1 %} A 
                             {% elif session ['role_id'] ==2 %} M
-                            {% elif session ['role_id'] ==3 %} S
+                            {% elif session ['role_id'] ==3 %} R
+                            {% elif session ['role_id'] ==4 %} S
                             {% else %} U 
                             {% endif %}
                 </div>
@@ -208,7 +209,8 @@
                         <div class="profile-avatar">
                             {% if session['role_id'] ==1 %} A 
                             {% elif session ['role_id'] ==2 %} M
-                            {% elif session ['role_id'] ==3 %} S
+                            {% elif session ['role_id'] ==3 %} R
+                            {% elif session ['role_id'] ==4 %} S
                             {% else %} U 
                             {% endif %}
 
