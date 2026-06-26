@@ -9,51 +9,23 @@ VALUES
 INSERT INTO users
 (role_id, user_code, password_hash)
 VALUES
-(1, 'admin@1001', 'hashed_password_1'),
-(2, 'manager@1001', 'hashed_password_2'),
-(3, 'receptionist@1001', 'hashed_password_3'),
-(4, 'staff@1001', 'hashed_password_4');
+(1,'admin@1001','hashed_password_1'),
+(2,'manager@1001','hashed_password_2'),
+(3,'receptionist@1001','hashed_password_3'),
+(4,'staff@1001','hashed_password_4'),
+(4,'staff@1002','hashed_password_5'),
+(4,'staff@1003','hashed_password_6');
 
-/*User*/
-INSERT INTO users (
-    role_id,
-    user_code,
-    password_hash
-)
-VALUES
-(
-    4,
-    'staff@1002',
-    'hashed_password_5'
-);
+/*
+-----------------------------------------------------------
+Password Updates
 
-INSERT INTO staff (
-    user_id,
-    first_name,
-    last_name,
-    email,
-    phone,
-    gender,
-    joining_date,
-    salary,
-    specialization,
-    shift_start,
-    shift_end
-)
-VALUES
-(
-    5,
-    'Priya',
-    'Patel',
-    'priya@example.com',
-    '9876543211',
-    'Female',
-    '2025-02-15',
-    42000.00,
-    'Skin Specialist',
-    '10:00',
-    '19:00'
-);
+Note:
+Only default system accounts use real bcrypt password hashes.
+Additional staff accounts use placeholder passwords and
+can be updated later after account creation.
+-----------------------------------------------------------
+*/
 
 update users
 set password_hash = '$2b$12$EWIhAN8kfUm1B1j.whjeqeVa.Ixm4m0QJqQ8M7uuEbdiryHqHfWb.'
@@ -98,6 +70,62 @@ VALUES
     'Hair Specialist',
     '09:00',
     '18:00'
+);  
+
+INSERT INTO staff (
+    user_id,
+    first_name,
+    last_name,
+    email,
+    phone,
+    gender,
+    joining_date,
+    salary,
+    specialization,
+    shift_start,
+    shift_end
+)
+VALUES
+(
+    5,
+    'Priya',
+    'Patel',
+    'priya@example.com',
+    '9876543211',
+    'Female',
+    '2025-02-15',
+    42000.00,
+    'Skin Specialist',
+    '10:00',
+    '19:00'
+);
+
+INSERT INTO staff (
+    user_id,
+    first_name,
+    last_name,
+    email,
+    phone,
+    gender,
+    joining_date,
+    salary,
+    specialization,
+    shift_start,
+    shift_end
+)
+VALUES
+(
+    6,
+    'Shanti',
+    'Sharma',
+    'shanti@gmail.com',
+    '9958642301',
+    'FEMALE',
+    '2026-06-11',
+    30000.00,
+    'Nails',
+    '10:00',
+    '19:00'
 );
 
 /*Service category*/
@@ -178,23 +206,23 @@ INSERT INTO staff_services
 (staff_id, service_id, experience_level)
 VALUES
 
-(3,3,'EXPERT'),
-(3,7,'ADVANCED'),
-(3,8,'ADVANCED'),
-(3,9,'EXPERT'),
+(2,3,'EXPERT'),
+(2,7,'ADVANCED'),
+(2,8,'ADVANCED'),
+(2,9,'EXPERT'),
 
-(3,12,'EXPERT'),
-(3,13,'ADVANCED');
+(2,12,'EXPERT'),
+(2,13,'ADVANCED');
 
 INSERT INTO staff_services
 (staff_id, service_id, experience_level)
 VALUES
 
-(4,14,'EXPERT'),
-(4,15,'ADVANCED'),
-(4,16,'ADVANCED'),
+(3,14,'EXPERT'),
+(3,15,'ADVANCED'),
+(3,16,'ADVANCED'),
 
-(4,17,'ADVANCED'),
-(4,18,'EXPERT'),
-(4,19,'ADVANCED');
+(3,17,'ADVANCED'),
+(3,18,'EXPERT'),
+(3,19,'ADVANCED');
 
