@@ -188,6 +188,7 @@ VALUES
 (6,'Body Massage',90,3000),
 (6,'Aroma Therapy',60,2500);
 
+
 /*Insert into staff service*/
 INSERT INTO staff_services
 (staff_id, service_id, experience_level)
