@@ -1,22 +1,28 @@
+/*
+ Salon ERP System
+ Database Schema
+-----------------------------------------------------------
+ Description:
+ This file creates the complete database structure for
+ the Salon ERP System.
+
+ Contents:
+ - Tables
+ - Primary Keys
+ - Foreign Keys
+ - Constraints
+ - Default Values
+
+ Note:
+ This file DOES NOT contain any data insertion.
+*/
+
 CREATE TABLE roles(
    role_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    role_name VARCHAR(50) UNIQUE NOT NULL,
    description TEXT,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ); 
-
-INSERT INTO roles(role_name, description)
-VALUES 
-('ADMIN', 'Full system access'),
-('MANAGER', 'Salon management access'),
-('RECEPTIONIST', 'Booking and customer management'),
-('STAFF', 'Service provider');
-
-INSERT INTO roles(role_name, description)
-VALUES
-('CUSTOMER', 'Website customer access');
-
-select * from roles;
 
 CREATE TABLE users (
        user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -61,7 +67,6 @@ CREATE TABLE staff (
 		  ON DELETE RESTRICT
 );
 
-
 CREATE TABLE customers (
     customer_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     full_name VARCHAR(150) NOT NULL,
@@ -83,7 +88,7 @@ CREATE TABLE customers (
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-/* Adding user_id into customer table */
+
 ALTER TABLE customers
 ADD COLUMN user_id INT UNIQUE;
 
@@ -95,9 +100,6 @@ ON DELETE RESTRICT;
 
 ALTER TABLE customers
 ALTER COLUMN phone DROP NOT NULL;
-
-select * from customers;
-
 
 CREATE TABLE service_categories (
     category_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -130,7 +132,6 @@ CREATE TABLE services (
         REFERENCES service_categories(category_id)
         ON DELETE RESTRICT
 );
-
 
 CREATE TABLE staff_services (
     staff_service_id INT
@@ -271,44 +272,6 @@ ADD CONSTRAINT fk_appointment_booking_service
 FOREIGN KEY (booking_service_id)
 REFERENCES booking_services(booking_service_id)
 ON DELETE RESTRICT;
-
-
-ALTER TABLE appointments
-DROP CONSTRAINT appointments_booking_id_key;
-
-SELECT conname
-FROM pg_constraint
-WHERE conrelid = 'appointments'::regclass;
-
-
-INSERT INTO appointments (
-    booking_id,
-    booking_service_id,
-    staff_id,
-    appointment_date,
-    start_time,
-    end_time,
-    priority_score
-)
-VALUES
-(
-    1,
-    1,
-    1,
-    '2026-06-01',
-    '11:00',
-    '11:30',
-    92.5
-),
-(
-    1,
-    2,
-    3,
-    '2026-06-01',
-    '11:30',
-    '12:30',
-    92.5
-);
 
 CREATE TABLE payments (
     payment_id INT
@@ -451,384 +414,17 @@ CREATE TABLE notifications (
         ON DELETE CASCADE
 );
 
-
 CREATE TABLE password_resets(
-        reset_id PRIMARY KEY,
-		user_id INTEGRE NOT NULL,
+        reset_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+		user_id INTEGER NOT NULL,
 		reset_token VARCHAR(255) NOT NULL UNIQUE,
 		expires_at TIMESTAMP NOT NULL,
 		is_used BOOLEAN DEFAULT FALSE,
-		created_At TIMESTAMP DEFAULT CURRENT_TIMESTAP,
+		created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
 		CONSTRAINT fk_password_reset_user
 		FOREIGN KEY(user_id)
 		REFERENCES users(user_id)
 		ON DELETE CASCADE
-        )
+        );
 
-/*Data insertion part*/
-
-INSERT INTO users
-(role_id, user_code, password_hash)
-VALUES
-(1, 'admin@1001', 'hashed_password_1'),
-(2, 'manager@1001', 'hashed_password_2'),
-(3, 'receptionist@1001', 'hashed_password_3'),
-(4, 'staff@1001', 'hashed_password_4');
-
-INSERT INTO users (
-    role_id,
-    user_code,
-    password_hash
-)
-VALUES
-(
-    4,
-    'staff@1002',
-    'hashed_password_5'
-);
-
-INSERT INTO staff (
-    user_id,
-    first_name,
-    last_name,
-    email,
-    phone,
-    gender,
-    joining_date,
-    salary,
-    specialization,
-    shift_start,
-    shift_end
-)
-VALUES
-(
-    6,
-    'Priya',
-    'Patel',
-    'priya@example.com',
-    '9876543211',
-    'Female',
-    '2025-02-15',
-    42000.00,
-    'Skin Specialist',
-    '10:00',
-    '19:00'
-);
-
-SELECT * FROM users;
-
-INSERT INTO staff (
-    user_id,
-    first_name,
-    last_name,
-    email,
-    phone,
-    gender,
-    joining_date,
-    salary,
-    specialization,
-    shift_start,
-    shift_end
-)
-VALUES
-(
-    4,
-    'Rahul',
-    'Sharma',
-    'rahul@example.com',
-    '9876543210',
-    'Male',
-    '2025-01-10',
-    35000.00,
-    'Hair Specialist',
-    '09:00',
-    '18:00'
-);
-select * from staff;
-
-INSERT INTO customers (
-    full_name,
-    email,
-    phone
-)
-VALUES
-(
-    'Aryan Dongre',
-    'aryan@gmail.com',
-    '9999999999'
-);
-
-
-
-INSERT INTO service_categories
-(category_name)
-VALUES
-('Hair'),
-('Skin'),
-('Groom'),
-('Bridal');
-
-INSERT INTO service_categories (
-    category_name
-)
-VALUES
-('Nails'),
-('Massage');
-
-select * from service_categories;
-
-INSERT INTO services (
-    category_id,
-    service_name,
-    duration_minutes,
-    price
-)
-VALUES
-(1, 'Hair Cut', 30, 500),
-(1, 'Hair Spa', 60, 1500),
-(2, 'Facial', 90, 2500);
-
-/* Services */
-INSERT INTO services
-(category_id, service_name, duration_minutes, price)
-VALUES
-(1,'Hair Coloring',120,3000),
-(1,'Hair Smoothening',180,6000),
-(1,'Hair Keratin',240,8000);
-
-INSERT INTO services
-(category_id, service_name, duration_minutes, price)
-VALUES
-(2,'Cleanup',45,1200),
-(2,'Detan',60,1800),
-(2,'Hydra Facial',90,3500);
-
-INSERT INTO services
-(category_id, service_name, duration_minutes, price)
-VALUES
-(3,'Beard Styling',30,400),
-(3,'Premium Groom Package',90,2500);
-
-INSERT INTO services
-(category_id, service_name, duration_minutes, price)
-VALUES
-(4,'Bridal Makeup',240,15000),
-(4,'Engagement Makeup',180,8000);
-
-INSERT INTO services (
-    category_id,
-    service_name,
-    duration_minutes,
-    price
-)
-VALUES
-(6,'Head Massage',30,700),
-(6,'Body Massage',90,3000),
-(6,'Aroma Therapy',60,2500);
-
-/* Insert into staff service*/
-
-INSERT INTO staff_services
-(staff_id, service_id, experience_level)
-VALUES
-
-(1,1,'EXPERT'),
-(1,2,'EXPERT'),
-(1,4,'ADVANCED'),
-(1,5,'ADVANCED'),
-(1,6,'ADVANCED'),
-
-(1,10,'EXPERT'),
-(1,11,'ADVANCED');
-
-INSERT INTO staff_services
-(staff_id, service_id, experience_level)
-VALUES
-
-(3,3,'EXPERT'),
-(3,7,'ADVANCED'),
-(3,8,'ADVANCED'),
-(3,9,'EXPERT'),
-
-(3,12,'EXPERT'),
-(3,13,'ADVANCED');
-
-INSERT INTO staff_services
-(staff_id, service_id, experience_level)
-VALUES
-
-(4,14,'EXPERT'),
-(4,15,'ADVANCED'),
-(4,16,'ADVANCED'),
-
-(4,17,'ADVANCED'),
-(4,18,'EXPERT'),
-(4,19,'ADVANCED');
-
-SELECT
-    st.first_name,
-    sv.service_name,
-    ss.experience_level
-FROM staff_services ss
-JOIN staff st
-    ON ss.staff_id = st.staff_id
-JOIN services sv
-    ON ss.service_id = sv.service_id
-ORDER BY st.first_name;
-
-SELECT * FROM staff_services;
-select * from services;
-SELECT * FROM service_categories;
-
-/* Insert into booking */
-INSERT INTO bookings (
-    customer_id,
-    booking_date,
-    booking_time,
-    notes
-)
-VALUES
-(
-    1,
-    '2026-06-01',
-    '11:00',
-    'Haircut appointment'
-);
-SELECT * FROM bookings;
-
-INSERT INTO booking_services (
-    booking_id,
-    service_id,
-    quantity,
-    price_snapshot
-)
-VALUES
-(1, 1, 1, 500),
-(1, 2, 1, 1500);
-
-SELECT * FROM booking_services;
-
-INSERT INTO appointments (
-    booking_id,
-    staff_id,
-    appointment_date,
-    start_time,
-    end_time,
-    priority_score
-)
-VALUES
-(
-    1,
-    1,
-    '2026-06-01',
-    '11:00',
-    '12:30',
-    92.5
-);
-
-INSERT INTO payments (
-    appointment_id,
-    amount,
-    payment_method,
-    payment_status,
-    transaction_reference
-)
-VALUES
-(
-    1,
-    2000,
-    'UPI',
-    'SUCCESS',
-    'TXN123456'
-);
-
-
-select
-  a.appointment_id,
-  c.full_name AS customer_name,
-  s.first_name AS staff_name,
-  a.bboking_service_
-  sv.service_name,
-  a.appointment_date,
-  p.payment_status
-From appointments a
-JOIN bookings b
-    ON a.booking_id = b.booking_id
-JOIN customers c
-     ON b.customer_id = c.customer_id
-JOIN staff s
-     ON a.staff_id =s.staff_id
-JOIN booking_services bs
-    ON b.booking_id = bs.booking_id	  
-JOIN services sv
-     ON bs.service_id = sv.service_id
-JOIN payments p
-    ON a.appointment_id = p.appointment_id;	 
-	 
-select * from users
-order by 'us';	
-
-update users
-set password_hash = '$2b$12$EWIhAN8kfUm1B1j.whjeqeVa.Ixm4m0QJqQ8M7uuEbdiryHqHfWb.'
-where user_id = 1;
-
-select user_id , user_code, password_hash
-from users
-where user_code = 'admin@1001'
-
-select * from staff;
-
-update users
-set password_hash = '$2b$12$Y5wpi01X0Y2jBKh2UvjgGeGcGgGnBdsWNkMJqusQm8sDZuaoZGtoe'
-where user_id =2;
-
-
-update users
-set password_hash = '$2b$12$IouXw5IPDvYZfLx/P2CE2OiiePcZdRyAO5EETJB4x8fAKcRmZeEY6'
-where user_id =3;
-
-update users
-set password_hash = '$2b$12$QLNIEd0s0MOUMx.YWlusFOfoOpKfBmRJlD2kNEWIlvD37DyZl/Lrq'
-where user_id = 4;
-
-
-SELECT
-    s.staff_id,
-    s.first_name,
-    s.user_id,
-    u.role_id,
-    r.role_name
-FROM staff s
-JOIN users u
-    ON s.user_id = u.user_id
-JOIN roles r
-    ON u.role_id = r.role_id
-WHERE r.role_name = 'STAFF';
-
-SELECT
-    ss.staff_id,
-    ss.service_id,
-    st.first_name,
-    st.employment_status,
-    st.is_available
-FROM staff_services ss
-JOIN staff st
-ON ss.staff_id = st.staff_id;
-
-SELECT
-    service_id,
-    service_name
-FROM services;
-
-SELECT * FROM bookings
-ORDER BY booking_id DESC;
-
-SELECT * FROM booking_services
-ORDER BY booking_service_id DESC;
-
-SELECT * FROM appointments
-ORDER BY appointment_id DESC;
-
-SELECT * FROM payments
-ORDER BY payment_id DESC;
