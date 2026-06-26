@@ -8,7 +8,8 @@ def get_db_connection():
             database=Config.DB_NAME,
             user=Config.DB_USER,
             password=Config.DB_PASSWORD,
-            port=Config.DB_PORT
+            port=Config.DB_PORT,
+            salmode="require"
         )
 
         print("Database connection successful")
