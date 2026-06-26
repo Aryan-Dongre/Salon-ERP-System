@@ -42,7 +42,7 @@ INSERT INTO staff (
 )
 VALUES
 (
-    6,
+    5,
     'Priya',
     'Patel',
     'priya@example.com',
