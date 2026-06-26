@@ -833,4 +833,5 @@ ORDER BY appointment_id DESC;
 SELECT * FROM payments
 ORDER BY payment_id DESC;
 
-select * from staff;
+SELECT DISTINCT service_name
+FROM services;

@@ -13,7 +13,10 @@ def get_user_by_code(user_code):
     WHERE user_code = %s """ 
 
     cursor.execute(query, (user_code,))
+    print("SEARCHING USER:", user_code)
     user= cursor.fetchone()
+    
+
 
     cursor.close()
     conn.close()
