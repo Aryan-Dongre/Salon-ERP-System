@@ -177,6 +177,13 @@ VALUES
 (4,'Bridal Makeup',240,15000),
 (4,'Engagement Makeup',180,8000);
 
+INSERT INTO services
+(category_id, service_name, duration_minutes, price)
+VALUES
+(5,'Gel Polish',45,800),
+(5,'Nail Art',60,1200),
+(5,'Nail Extension',120,2500);
+
 INSERT INTO services (
     category_id,
     service_name,
